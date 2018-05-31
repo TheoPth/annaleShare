@@ -1,0 +1,5 @@
+<ul size="3" class="list-group p-0" *ngIf="liste.length > 0">
+  <li class="list-group-item" (click)="emitPick(pick)" *ngFor="let pick of liste; let i = index">{{pick.text}}</li>
+</ul>
+
+<div *ngIf="!(liste.length > 0)"> La Liste est vide </div>

@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="row">
+    <div class="col-4">
+      <app-liste-clickable
+      [listePick]="ressourceType$" 
+      [args]="['name']" 
+      [id]="'idTypeRessource'" 
+      (pickedEvent)="pickTypeRessource($event)"
+      ></app-liste-clickable>
+
+      <app-modal-ajout [idReason]="'ajoutRessource'" [title]="'Ajouter un type de ressoure ?' " (pickedEvent)="addTypeRessource($event)"></app-modal-ajout>
+    </div>
+
+    
+    
+    <div class="col-8">
+      <router-outlet></router-outlet>
+    </div>
+    
+  </div>
+</div>
