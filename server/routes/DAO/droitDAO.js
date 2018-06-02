@@ -7,7 +7,7 @@ const droitTools = require('../../shared/tools/droit.tools');
 /* Permet de communiquer avec la base en rapport avec les droits */
 let droitDAO = {
 
-    // Inscrit un user dans une spécialité
+    // Inscrit un user dans une spécialité avec un droit prédéfini
     addDroitSpecialite : function (req, res, idUser, idSpecialite, idDroit, callback) {
         req.getConnection(function (err, connection) {
             const query = "INSERT INTO DroitUserSpecialite(idDroit, idUser, idSpecialite) VALUES (?, ?, ?)";

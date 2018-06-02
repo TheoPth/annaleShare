@@ -4,114 +4,119 @@ import { State } from "../../../shared/store";
 import { switchMap, tap, debounceTime, map, withLatestFrom } from "rxjs/operators";
 import { ofType, Effect, Actions } from "@ngrx/effects";
 import { SearchAction,
-    FETCH_POSSIBILITY,
-    FetchPossibilitySuccess,
-    SET_PARENT_SELECTION,
-    FETCH_INIT_ECOLE,
-    FETCH_SEARCH_POSSIBILITY,
-    FETCH_SPECIALITIES_FROM_SPECIALITE,
-    SetParentSelection,
-    FETCH_ECOLE_PARENT,
-    FetchEcoleParent,
     ADD_ECOLE,
     ADD_MATIERE,
     ADD_SPECIALITE,
     AddEcole,
     AddMatiere,
     AddSpecialite,
-    FetchInitEcole,
-    FetchSearchPossibility} from './search.actions';
+    FETCH_ECOLES,
+    FetchEcolesSuccess,
+    FETCH_SPECIALITES,
+    FETCH_MATIERES,
+    FetchMatieresSuccess,
+    FetchEcoles,
+    FetchMatieres,
+    FetchSpecialites,
+    FetchSpecialitesSuccess,
+    FETCH_DROIT,
+    FetchDroitSuccess
+} from './search.actions';
 import { SearchService } from "../services/search.service";
 import { searchPossibility } from '../models/searchPossibility.model';
-import { searchParentSelector } from "./search.selectors";
 import { searchType } from "../models/searchType.enum";
+import { getMatiereSelectedSelector, getEcoleSelectedSelector, getSpecialiteSelectedSelector } from "./search.selectors";
+import { FetchSpecialite } from "../../../monitoring/shared/store/monitoring.actions";
+import { Droit } from "../../../monitoring/shared/models/droit.model";
 
 
 @Injectable()
 export class SearchEffects {
-
-    @Effect()
-    chercheLesPossibilitees$ = this.action$.pipe(
-        ofType(FETCH_SEARCH_POSSIBILITY),
-        switchMap ( () => {
-            return this.store.pipe(select(searchParentSelector))
-        }),
-        switchMap ((search: searchPossibility) => {
-            return this.searchService.getPossibility(search);
-        }),
-        map( (response: searchPossibility[]) => {
-            return new FetchPossibilitySuccess(response);
-        })
-    )
     
     @Effect()
-    initEcole$ = this.action$.pipe(
-        ofType(FETCH_INIT_ECOLE),
+    fetchEcoles$ = this.action$.pipe(
+        ofType(FETCH_ECOLES),
         switchMap ((search: searchPossibility) => {
-            return this.searchService.getEcole();
+            return this.searchService.getEcoles();
         }),
         map( (response: searchPossibility[]) => {
-            return new FetchPossibilitySuccess(response);
+            return new FetchEcolesSuccess(response);
         })
     )
 
     @Effect()
-    fetchSpecialitiesFromSpecilite$ = this.action$.pipe(
-        ofType(FETCH_SPECIALITIES_FROM_SPECIALITE),
-        switchMap ((search: searchPossibility) => {
-            return this.searchService.getAllSpecilitiesFromSpeciality(search);
+    fetchSpecialites$ = this.action$.pipe(
+        ofType(FETCH_SPECIALITES),
+        withLatestFrom(this.store.pipe(select(getEcoleSelectedSelector))),
+        switchMap (([action, ecole]  : [FetchSpecialite, searchPossibility]) => {
+            return this.searchService.getSpecialites(ecole.id);
         }),
-        switchMap((response: searchPossibility[]) => {
-            return [new FetchPossibilitySuccess(response),
-            new FetchEcoleParent(response[0])];
+        map( (response: searchPossibility[]) => {
+            return new FetchSpecialitesSuccess(response);
         })
     )
 
-    @Effect({dispatch: true})
-    fetchEcoleParent$ = this.action$.pipe(
-        ofType(FETCH_ECOLE_PARENT),
-        switchMap ((search: searchPossibility) => {
-            return this.searchService.getParent(search);
+    @Effect()
+    fetchMatieres$ = this.action$.pipe(
+        ofType(FETCH_MATIERES),
+        withLatestFrom(this.store.pipe(select(getSpecialiteSelectedSelector))),
+        switchMap (([action, spe]  : [FetchSpecialite, searchPossibility]) => {
+            return this.searchService.getMatieres(spe.id);
         }),
-        map( (response: searchPossibility) => {
-            return new SetParentSelection({id:1, wording :"", type :searchType.ECOLE});
+        map( (response: searchPossibility[]) => {
+            return new FetchMatieresSuccess(response);
         })
     )
 
 
-    @Effect({dispatch: true})
-    addPossibility$ = this.action$.pipe(
+    @Effect()
+    addEcole$ = this.action$.pipe(
         ofType(ADD_ECOLE),
-        switchMap ((nom : AddEcole) => {
-            return this.searchService.addEcole(nom.payload);
+        switchMap ((action : AddEcole) => {
+            return this.searchService.addEcole(action.payload);
         }), 
         map( () => {
-            return new FetchInitEcole();
+            return new FetchEcoles();
         })
     )
 
-    @Effect({dispatch: false})
+    @Effect()
     addMatiere$ = this.action$.pipe(
         ofType(ADD_MATIERE),
-
-        switchMap ((matiere : AddMatiere) => {
-            return this.searchService.addMatiere(matiere.payload);
+        withLatestFrom(this.store.pipe(select(getSpecialiteSelectedSelector))),
+        switchMap (([action, ecole]  : [AddMatiere, searchPossibility])=> {
+            return this.searchService.addMatiere(action.payload, ecole.id);
         }),
         map ( () => {
-            return this.store.dispatch(new FetchSearchPossibility());
+            return new FetchMatieres();
+        })
+    )
+
+    @Effect()
+    addSpecialite$ = this.action$.pipe(
+        ofType(ADD_SPECIALITE),
+        withLatestFrom(this.store.pipe(select(getEcoleSelectedSelector))),
+        switchMap (([action, matiere]  : [AddSpecialite, searchPossibility]) => {
+            return this.searchService.addSpecialite(action.payload, matiere.id);
+        }),
+        map ( () => {
+            return new FetchSpecialites();
         })
        
     )
-    @Effect({dispatch: false})
-    addSpecialite$ = this.action$.pipe(
-        ofType(ADD_SPECIALITE),
-        switchMap ((specialite : AddSpecialite) => {
-            return this.searchService.addSpecialite(specialite.payload);
+
+    @Effect()
+    fetchDroit$ = this.action$.pipe(
+        ofType(FETCH_DROIT),
+        withLatestFrom(this.store.pipe(select(getSpecialiteSelectedSelector))),
+        switchMap( ([action, spe] : [Action, searchPossibility]) => {
+            
+            return this.searchService.getDroitUserSpeSelected(spe.id);
         }),
-        map ( () => {
-            return this.store.dispatch(new FetchSearchPossibility());
+        map( (droit: Droit[]) => {
+            
+            return new FetchDroitSuccess(droit);
         })
-       
     )
 
     constructor (private action$: Actions, 

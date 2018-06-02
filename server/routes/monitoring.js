@@ -16,12 +16,6 @@ router.get('/getMatiereUser', userDAO.isLoggedIn, (req, res) => {
     });
 });
 
-router.get('/getDroitUserSpe/:idSpe', userDAO.isLoggedIn, (req, res) => {
-    droitDAO.getDroitUserSpecialite(req, res, req.user.id, req.params.idSpe, result => {
-        res.status(200).json(droitTools.getDroits(result));
-    });
-});
-
 router.get('/getMatiereFromSpe/:idSpe', userDAO.isLoggedIn, (req, res) => {
     matiereDAO.getMatiereFromSpe(req, res, req.params.idSpe, result => {
         res.status(200).json(result);
@@ -40,11 +34,23 @@ router.get('/getUser/:idSpe', userDAO.isLoggedIn, (req, res) => {
     });
 });
 
+// Renvoie les droits pour le user actuel pour une spécialiate
+router.get('/getDroitUserSpe/:idSpe', userDAO.isLoggedIn, (req, res) => {
+    droitDAO.getDroitUserSpecialite(req, res, req.user.id, req.params.idSpe, result => {
+        // Si le user n'est pas inscrit, il ne possede pas de droits dans cette matière
+        if (result[0]) {
+            res.status(200).json(droitTools.getDroits(result[0].idDroit));
+        } else {
+            res.status(200).json(droitTools.getDroits());
+        }
+        
+    });
+});
+
 router.get('/getDroitUserSpe/:idSpe/:idUser', userDAO.isLoggedIn, (req, res) => {
-    
     droitDAO.getDroitUserSpecialite(req, res, req.params.idUser, req.params.idSpe, result => {
         // Recupere le code droit, il faut le decoder
-        res.status(200).json(droitTools.getDroits(result));
+        res.status(200).json(droitTools.getDroits(result[0].idDroit));
     });
 });
 
@@ -53,35 +59,25 @@ router.post('/setDroitUser', userDAO.isLoggedIn, (req, res) => {
     const idUser = req.body.idUser;
     const idSpe = req.body.idSpe;
     const idDroit = req.body.idDroit;
-    droitDAO.getDroitUserSpecialite(req, res, idUser, idSpe, result => {
-        // On vérifie que le user n'a pas deja ce droit et qu'il est inscrit dans la matiere
-        
-        if (result.length > 0 && !droitTools.possedeDroit(idDroit, result[0].idDroit,)) {
-            droitDAO.updateDroitUser(req, res, idDroit * result[0].idDroit, idUser, idSpe, result => {
-                return res.status(200).json();
-            });
-        }
+   
+    droitDAO.updateDroitUser(req, res, idDroit, idUser, idSpe, result => {
+        return res.status(200).json();
     });
+      
 });
 
 router.post('/unsetDroitUser', userDAO.isLoggedIn, (req, res) => {
     const idUser = req.body.idUser;
     const idSpe = req.body.idSpe;
     const idDroit = req.body.idDroit;
-    droitDAO.getDroitUserSpecialite(req, res, idUser, idSpe, result => {
-        // On vérifie que le user n'a pas deja ce droit et qu'il est inscrit dans la matiere
-        console.log (droitTools.possedeDroit(result[0].idDroit, idDroit));
-        if (result.length > 0 && droitTools.possedeDroit(idDroit, result[0].idDroit)) {
-            console.log(result[0].idDroit / idDroit);
-            droitDAO.updateDroitUser(req, res, result[0].idDroit / idDroit, idUser, idSpe, result => {
-                return res.status(200).json();
-            });
-        }
-
-        else {
-            // TODO
-        }
+    
+    
+    // On vérifie que le user possede bien ce droit et qu'il est inscrit
+    let idDroitPrec = droitTools.getUndoDroit(idDroit);
+    droitDAO.updateDroitUser(req, res, idDroitPrec, idUser, idSpe, result => {
+        return res.status(200).json();
     });
+    
 });
 
 

@@ -3,11 +3,10 @@ import { Donnee } from '../models/donnee.model';
 import { Droit } from '../models/droit.model';
 import { UserMonitor } from "../models/userMonitor.model";
 
+
 // GET DATA
 export const FETCH_SPECIALITE = '[ monitoring ] fetch specialite';
 export const FETCH_SPECIALITE_SUCCESS = '[ monitoring ] fetch specialite success';
-export const FETCH_DROIT = '[ monitoring ] fetch droit';
-export const FETCH_DROIT_SUCCESS = '[ monitoring ] fetch droit success';
 export const FETCH_MATIERE = '[ monitoring ] fetch matiere';
 export const FETCH_MATIERE_SUCCESS = '[ monitoring ] fetch matiere success';
 export const FETCH_USER = '[ monitoring ] fetch user';
@@ -15,6 +14,8 @@ export const FETCH_USER_SUCCESS = '[ monitoring ] fetch user success';
 export const FETCH_DROIT_USER_SELECTED = '[ monitoring ] fetch droit user selected';
 export const FETCH_DROIT_USER_SELECTED_SUCCESS = '[ monitoring ] fetch droit user selected success';
 
+export const FETCH_DROIT = '[ monitoring ] fetch droit';
+export const FETCH_DROIT_SUCCESS = '[ monitoring ] fetch droit success';
 
 
 export class FetchSpecialite implements Action {
@@ -27,7 +28,7 @@ export class FetchSpecialiteSuccess implements Action {
 };
 
 export class FetchDroit implements Action {
-    readonly type = FETCH_DROIT;   
+    readonly type = FETCH_DROIT; 
 };
 
 export class FetchDroitSuccess implements Action {

@@ -1,84 +1,70 @@
 <div class="container">
-    <div class="row">
-        <div class="col-12 col-md-4">
-            <div class="container container-white">
-              <div class="row">
-                <div class="col-12">
-                  <span class="float-right">
-                      <app-modal-ajout [idReason]="'ajout' + typeAct"
-                      [title]="'Ajouter : ' + typeAct "
-                      (pickedEvent)="ajouter($event)">
-                    </app-modal-ajout>
-                  </span>
-                  <h3 class="text-center mt-1">{{typeAct}}</h3>
-                  <hr>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-12">
-                    <button (click)="choose(searchPossibility)"
-                      *ngFor="let searchPossibility of (search$ | async)" 
-                      type="button" 
-                      class="btn btn-search waves-effect col-12 mt-2">
-                      {{ searchPossibility.wording }}
-                    </button>
-                </div>
-              </div>
-            </div>
+  <div class="row">
+    <div class="col-12 col-md-4">
+      <div class="container container-white">
+        <div class="row">
+          <div class="col-12">
+            <span class="float-right">
+              <app-modal-ajout [idReason]="'ajoutEcole'" [title]="'Ajouter une école ?' " (pickedEvent)="ajouterEcole($event)">
+              </app-modal-ajout>
+            </span>
+            <h3 class="text-center mt-1">Ecoles</h3>
+            <hr>
+          </div>
         </div>
-          <div class="col-12 col-md-4">
-              <div class="container container-white">
-                <div class="row">
-                  <div class="col-12">
+        <div class="row">
+          <div class="col-12" style="max-height: 60vh; overflow-y : scroll">
+            <button (click)="selectEcole(ecole)" *ngFor="let ecole of (ecoles$ | async)" type="button" class="btn btn-search waves-effect col-12 mt-2">
+              {{ ecole.wording }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-                    <span class="float-right">
-                        <app-modal-ajout [idReason]="'ajout' + typeAct"
-                        [title]="'Ajouter : ' + typeAct "
-                        (pickedEvent)="ajouter($event)">
-                      </app-modal-ajout>
-                    </span>
-                    <h3 class="text-center mt-1">Section</h3>
-                    <hr>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-12">
-                      <button (click)="choose(searchPossibility)"
-                        *ngFor="let searchPossibility of (search$ | async)" 
-                        type="button" 
-                        class="btn btn-search waves-effect col-12 mt-2">
-                        {{ searchPossibility.wording }}
-                      </button>
-                  </div>
-                </div>
-              </div>
+    <div class="col-12 col-md-4">
+      <div class="container container-white" >
+        <div class="row">
+          <div class="col-12">
+
+            <span class="float-right">
+              <app-modal-ajout [idReason]="'ajoutSection'" [title]="'Ajouter une section ?'" (pickedEvent)="ajouterSpecialite($event)">
+              </app-modal-ajout>
+            </span>
+            <h3 class="text-center mt-1">Section</h3>
+            <hr>
           </div>
-            <div class="col-12 col-md-4">
-                <div class="container container-white">
-                  <div class="row">
-                    <div class="col-12">
-  
-                      <span class="float-right">
-                          <app-modal-ajout [idReason]="'ajout' + typeAct"
-                          [title]="'Ajouter : ' + typeAct "
-                          (pickedEvent)="ajouter($event)">
-                        </app-modal-ajout>
-                      </span>
-                      <h3 class="text-center mt-1">Matière</h3>
-                      <hr>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-12">
-                        <button (click)="choose(searchPossibility)"
-                          *ngFor="let searchPossibility of (search$ | async)" 
-                          type="button" 
-                          class="btn btn-search waves-effect col-12 mt-2">
-                          {{ searchPossibility.wording }}
-                        </button>
-                    </div>
-                  </div>
-                </div>
-            </div>
+        </div>
+        <div class="row">
+          <div class="col-12" style="max-height: 60vh; overflow-y : scroll" >
+            <button (click)="selectSpecialite(spe)" *ngFor="let spe of (specialites$ | async)" type="button" class="btn btn-search waves-effect col-12 mt-2">
+              {{ spe.wording }}
+            </button>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-4">
+      <div class="container container-white">
+        <div class="row">
+          <div class="col-12">
+            <span class="float-right">
+                <app-modal-ajout [idReason]="'ajoutMatiere'" [title]="'Ajouter une matière ?' " (pickedEvent)="ajouterMatiere($event)" *ngIf="possedeDroit('Ajouter')">
+                </app-modal-ajout>
+              </span>
+            <h3 class="text-center mt-1">Matière</h3>
+            <hr>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12" style="max-height: 60vh; overflow-y : scroll">
+            <button (click)="selectMatiere(matiere)" *ngFor="let matiere of (matieres$ | async)" type="button" class="btn btn-search waves-effect col-12 mt-2">
+              {{ matiere.wording }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

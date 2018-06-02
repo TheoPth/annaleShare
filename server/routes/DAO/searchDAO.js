@@ -88,11 +88,11 @@ let userDaoModule = {
         });
     },
 
-    addSpecialite: function (req, res, specialite, callback) {
+    addSpecialite: function (req, res, idEcole, nomSpecialite, callback) {
 
         req.getConnection(function (err, connection) {
             const query1 = `INSERT INTO Specialite(idSpecialite, nom, idEcole) VALUES (NULL, ?, ?)`;
-            connection.query(query1, [specialite.nom, specialite.idEcole], function (err, rows, fields) {
+            connection.query(query1, [nomSpecialite, idEcole], function (err, rows, fields) {
                 if (err) {
                     console.log(err);
                     return res.status(500);
@@ -113,11 +113,11 @@ let userDaoModule = {
         });
     },
 
-    addMatiere: function (req, res, matiere, callback) {
+    addMatiere: function (req, res, nomMatiere, idSpecialite, callback) {
 
         req.getConnection(function (err, connection) {
             const query = `INSERT INTO Matiere(idMatiere, Libelle, idSpecialite) VALUES (NULL, ?, ?) `;
-            connection.query(query, [matiere.nom, matiere.idSpecialite], function (err, rows, fields) {
+            connection.query(query, [nomMatiere, idSpecialite], function (err, rows, fields) {
                 if (err) {
                     console.log(err);
                     return res.status(500);

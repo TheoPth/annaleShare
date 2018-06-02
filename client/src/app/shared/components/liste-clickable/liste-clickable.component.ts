@@ -59,7 +59,6 @@ export class ListeClickableComponent implements OnInit {
       // Création du text à afficher dans les options
       var elemText = "";
       Array.prototype.forEach.call(property, ((prop, index) => {
-        console.log (property);
         if (index >= property.length - 1) {
           elemText += elem[prop];
         } else {

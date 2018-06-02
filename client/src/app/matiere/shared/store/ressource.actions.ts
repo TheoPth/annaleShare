@@ -15,6 +15,8 @@ export const ADD_TYPE_RESSOURCE = '[ matiere ] add type ressource';
 export const UPLOAD_FILE = '[ matiere ] upload file';
 export const FETCH_RESSOURCE_FILE = '[ matiere ] fetch ressource file';
 export const FETCH_RESSOURCE_FILE_SUCCESS = '[ matiere ]  fetch ressource file success';
+export const DELETE_FILE = '[ matiere ] delete file';
+
 
 export class FetchRessource implements Action {
     readonly type = FETCH_RESSOURCE;  
@@ -69,6 +71,12 @@ export class FetchRessourceFileSuccess {
     constructor(public payload: RessourceFile[]) {}
 }
 
+export class DeleteFile {
+    readonly type = DELETE_FILE;
+    constructor(public payload: RessourceFile){}
+}
+
+
 export type RessourceAction =
 FetchInitTypeRessourceSuccess |
 FetchRessource |
@@ -81,4 +89,3 @@ AjoutTypeRessource |
 UploadFile |
 FetchRessourceFile |
 FetchRessourceFileSuccess;
-

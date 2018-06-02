@@ -3,18 +3,21 @@ import { Observable } from 'rxjs';
 import { searchPossibility } from './shared/models/searchPossibility.model';
 import { Store, select } from '@ngrx/store';
 import { State } from '../shared/store';
-import { SetParentSelection, 
-  FetchSearchPossibility,
-   FetchInitEcole, 
-  FetchSpecialitiesFromSpecialite,
-  FetchEcoleParent, 
-  SetMatiereSelection,
+import { 
   AddEcole,
   AddSpecialite,
-  AddMatiere} from './shared/store/search.actions';
-import { searchPossibilitySelector, searchParentSelector } from './shared/store/search.selectors';
+  AddMatiere,
+  FetchEcoles,
+  SetEcoleSelected,
+  FetchSpecialites,
+  SetSpecialiteSelected,
+  FetchMatieres,
+  SetMatiereSelected,
+  FetchDroit} from './shared/store/search.actions';
 import { searchType } from './shared/models/searchType.enum';
 import { Router } from '@angular/router';
+import { getEcoleSelectedSelector, getEcolesSelector, getSpecialitesSelector, getMatieresSelector, getDroitsSpeSelectedSelector } from './shared/store/search.selectors';
+import { Droit } from '../monitoring/shared/models/droit.model';
 
 
 @Component({
@@ -23,90 +26,71 @@ import { Router } from '@angular/router';
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
-  public  search$ : Observable<searchPossibility[]>;
-  public  parent$ : Observable<searchPossibility>;
-  public typeAct : searchType;
-  public parent : searchPossibility;
-  public pos : searchPossibility;
+  public ecoles$ : Observable<searchPossibility[]>;
+  public specialites$ : Observable<searchPossibility[]>;
+  public matieres$ : Observable<searchPossibility[]>;
+  public droitsUser$ : Observable<Droit[]>;
+  public droitUser : Droit[];
   
   ngOnInit() {
-    this.store.dispatch(new FetchInitEcole());
-    this.typeAct = searchType.ECOLE;
+    this.store.dispatch(new FetchEcoles());
+    this.ecoles$ = this.store.pipe(select (getEcolesSelector));
+    
+    // Récupération des droits du user
+    this.droitsUser$ = this.store.pipe(select(getDroitsSpeSelectedSelector));
+    this.droitsUser$.subscribe( (droits : Droit[]) => {
+      this.droitUser = droits;
+    })
   }
 
   constructor( private store: Store<State>, private router: Router) {
-    this.search$ = this.store.pipe(select(searchPossibilitySelector));
-    this.parent$ = this.store.pipe(select(searchParentSelector));
-
-
-    let sub = this.parent$.subscribe(value => this.parent = value );
-    let sub2 = this.search$.subscribe(value => this.pos = value[0]);
-
   }
 
-  public choose (choix : searchPossibility): void {
-    this.typeAct = this.typeSuiv(this.typeAct);
-    if (choix.type != searchType.MATIERE) {
-      this.store.dispatch(new SetParentSelection(choix));
-      this.store.dispatch(new FetchSearchPossibility());
-    } else {
-      this.store.dispatch(new SetMatiereSelection(choix));
-      this.router.navigateByUrl('/matiere');
-    }
-  }
-
-  public precedent(): void {
-    this.typeAct = this.typePrec(this.typeAct);
+  public selectEcole(ecole : searchPossibility): void {
+    this.store.dispatch(new SetEcoleSelected(ecole));
+    this.store.dispatch(new FetchSpecialites());
+    this.specialites$ = this.store.pipe(select(getSpecialitesSelector));
     
-    
-    if (this.typePrec(this.typeAct) == searchType.SPECIALITE) {
-      this.store.dispatch(new FetchSpecialitiesFromSpecialite(this.parent));
-    } else if (this.typePrec(this.typeAct) == searchType.ECOLE) {
-      this.store.dispatch(new FetchInitEcole());
-    }
   }
 
+  public selectSpecialite(spe : searchPossibility): void {
+    this.store.dispatch(new SetSpecialiteSelected(spe));
+    this.store.dispatch(new FetchMatieres());
+    this.matieres$ = this.store.pipe(select(getMatieresSelector));
 
-  public typeSuiv (type : searchType) : searchType {
+    // Récupération des droits du user sur cette spécialité
+    this.store.dispatch(new FetchDroit());
+  }
 
-    switch (type) {
-      case searchType.ECOLE  : {
-        return searchType.SPECIALITE
-      }
-      case searchType.SPECIALITE  : {
-        return searchType.MATIERE
-      }
-      case searchType.MATIERE  :{
-        return searchType.MATIERE
-      }
+  public selectMatiere(matiere : searchPossibility): void {
+    this.store.dispatch(new SetMatiereSelected(matiere));
+    this.router.navigateByUrl('/matiere');
+  }
 
+  public ajouterEcole (nomEcole : string) {
+    this.store.dispatch(new AddEcole(nomEcole));
+    
+  }
+
+  public ajouterSpecialite (nomSpe : string) {
+    this.store.dispatch(new AddSpecialite(nomSpe));
+  }
+
+  public ajouterMatiere (nomMatiere : string) {
+    this.store.dispatch(new AddMatiere(nomMatiere));
+  }
+
+  public possedeDroit(nomDroit : string) : boolean {
+    let possedeDroit = false;
+    if (this.droitUser) {
+      this.droitUser.forEach((droit : Droit) => {
+        if ( droit.intitule == nomDroit ) {
+          possedeDroit = droit.estAcquis;
+        }
+    });
     }
    
-  }
-  public typePrec (type : searchType) : searchType {
 
-    switch (type) {
-      case searchType.ECOLE  : {
-        return searchType.ECOLE
-      }
-      case searchType.SPECIALITE  : {
-        return searchType.ECOLE
-      }
-      case searchType.MATIERE  :{
-        return searchType.SPECIALITE
-      }
-    }
-   
-  }
-
-  public ajouter(nom : string) : void {
-    
-    if (this.typeAct == searchType.ECOLE) {
-      this.store.dispatch(new AddEcole(nom));
-    } else if (this.typeAct == searchType.SPECIALITE) {
-      this.store.dispatch(new AddSpecialite({nom : nom, idEcole : this.parent.id}));
-    } else if (this.typeAct == searchType.MATIERE) {
-      this.store.dispatch(new AddMatiere({nom : nom, idSpecialite : this.parent.id}));
-    }
+    return possedeDroit;
   }
 }

@@ -1,29 +1,50 @@
 import { searchPossibility } from '../models/searchPossibility.model';
-import { SET_PARENT_SELECTION, SearchAction, FETCH_POSSIBILITY_SUCCESS, SET_MATIERE_SELECTED } from './search.actions';
+import { SET_SPECIALITE_SELECTED, FETCH_ECOLES_SUCCESS, FETCH_SPECIALITES_SUCCESS, FETCH_MATIERES_SUCCESS, SET_ECOLE_SELECTED, SET_MATIERE_SELECTED, SearchAction, FETCH_DROIT_SUCCESS } from './search.actions';
 import { searchType } from '../models/searchType.enum';
+import { Droit } from '../../../monitoring/shared/models/droit.model';
 export interface SearchState {
-    possibility: searchPossibility[];
-    parent? : searchPossibility;
-    matiereSelected? : searchPossibility;
+    ecoles : searchPossibility[];
+    specialites: searchPossibility[];
+    matieres: searchPossibility[];
+    ecoleSelected : searchPossibility;
+    matiereSelected : searchPossibility;
+    specialiteSelected : searchPossibility;
+    droitsSpeSelected : Droit[];
 }
 
-const initialState = {
-    possibility: [{id : 1, wording : 'Polytech', type : searchType.ECOLE},
-    {id : 2, wording : 'ParisSud', type : searchType.ECOLE}]
-}
-
-export function SearchReducer(state: SearchState = initialState, action: SearchAction): SearchState {
+export function SearchReducer(state: SearchState, action: SearchAction): SearchState {
     switch (action.type) {
-        case FETCH_POSSIBILITY_SUCCESS: {
+        case FETCH_ECOLES_SUCCESS: {
             return {
                 ...state,
-                possibility: action.payload
+                ecoles: action.payload
             }
         }
-        case SET_PARENT_SELECTION : {
+        case FETCH_SPECIALITES_SUCCESS : {
             return {
                 ...state,
-                parent: action.payload
+                specialites: action.payload
+            }
+        }
+
+        case FETCH_MATIERES_SUCCESS :  {
+            return {
+                ...state,
+                matieres : action.payload
+            }
+        }
+
+        case SET_ECOLE_SELECTED : {
+            return {
+                ...state,
+                ecoleSelected: action.payload
+            }
+        }
+
+        case SET_SPECIALITE_SELECTED :  {
+            return {
+                ...state,
+                specialiteSelected : action.payload
             }
         }
 
@@ -32,6 +53,14 @@ export function SearchReducer(state: SearchState = initialState, action: SearchA
                 ...state,
                 matiereSelected : action.payload
             }
+        }
+
+        case FETCH_DROIT_SUCCESS : {
+            return {
+                ...state,
+                droitsSpeSelected : action.payload
+            }
+
         }
     }
     return state;

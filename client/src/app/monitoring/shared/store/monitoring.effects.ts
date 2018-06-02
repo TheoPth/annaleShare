@@ -3,7 +3,7 @@ import { Action, Store, select} from  "@ngrx/store";
 import { State } from "../../../shared/store";
 import { switchMap, tap, debounceTime, map, withLatestFrom } from "rxjs/operators";
 import { ofType, Effect, Actions } from "@ngrx/effects";
-import { FETCH_SPECIALITE, FetchSpecialiteSuccess, FetchDroitSuccess, FETCH_DROIT, FetchMatiereSuccess, DELETE_MATIERE, DeleteMatiere, FetchMatiere, FETCH_MATIERE, FETCH_USER, FetchUser, FetchUserSuccess, FETCH_DROIT_USER_SELECTED, FetchDroitUserSelected, FetchDroitUserSelectedSuccess, SET_DROIT_USER_SELECTED, UNSET_DROIT_USER_SELECTED, SetDroitUserSelected } from "./monitoring.actions";
+import { FETCH_SPECIALITE, FetchSpecialiteSuccess, FetchDroitSuccess, FETCH_DROIT, FetchMatiereSuccess, DELETE_MATIERE, DeleteMatiere, FetchMatiere, FETCH_MATIERE, FETCH_USER, FetchUser, FetchUserSuccess, FETCH_DROIT_USER_SELECTED, FetchDroitUserSelected, FetchDroitUserSelectedSuccess, SET_DROIT_USER_SELECTED, UNSET_DROIT_USER_SELECTED, SetDroitUserSelected, FetchDroit } from "./monitoring.actions";
 import { MonitoringService } from '../services/monitoring.service';
 import { Donnee } from "../models/donnee.model";
 import { Droit } from "../models/droit.model";
@@ -95,8 +95,8 @@ export class MonitoringEffects {
         switchMap( ([action, user, spe] : [SetDroitUserSelected, UserMonitor, Donnee]) => {
             return this.monitoringService.setDroitUser(spe.id, user.id, action.payload.idDroit);
         }),
-        map( () => {
-            return new FetchDroitUserSelected();
+        switchMap( () => {
+            return [new FetchDroitUserSelected(), new FetchDroit()];
         })
     )
 
@@ -109,9 +109,8 @@ export class MonitoringEffects {
         switchMap( ([action, user, spe] : [SetDroitUserSelected, UserMonitor, Donnee]) => {
             return this.monitoringService.unsetDroitUser(spe.id, user.id, action.payload.idDroit);
         }),
-        map( () => {
-            console.log("YO");
-            return new FetchDroitUserSelected();
+        switchMap( () => {
+            return [new FetchDroitUserSelected(), new FetchDroit()];
         })
     )
 

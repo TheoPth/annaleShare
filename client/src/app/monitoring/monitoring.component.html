@@ -6,16 +6,17 @@
                 
                 <div class="col-lg-12">
                     <h3>Mes spécialités :</h3>
+                    
                     <button (click)="afficheSpe(spe)"
                         *ngFor="let spe of (specialites$ | async)" 
                         type="button" 
                         class="btn btn-outline-info btn-rounded waves-effect col-lg-3 col-sm-6 mr-0 ml-0">{{ spe.nom }}
                     </button>
+                    <hr>
                 </div>
                 
                 <div class="col-lg-12">
                     <h3>Mes droits :</h3>
-
                     <ul class="list-group">
                         <li *ngFor="let droit of droits$ | async " class="list-group-item ">
                             {{ droit.intitule }}

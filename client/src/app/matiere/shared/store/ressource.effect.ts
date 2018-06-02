@@ -3,10 +3,10 @@ import { Action, Store, select} from  "@ngrx/store";
 import { State } from "../../../shared/store";
 import { switchMap, tap, debounceTime, map } from "rxjs/operators";
 import { ofType, Effect, Actions } from "@ngrx/effects";
-import { FETCH_INIT_TYPE_RESSOURCE, FetchInitTypeRessourceSuccess, FETCH_RESSOURCE, FetchRessource, FetchRessourceSuccess, ADD_RESSOURCE, AjoutRessource, ADD_TYPE_RESSOURCE, AjoutTypeRessource, FetchInitTypeRessource, UPLOAD_FILE, UploadFile, FETCH_RESSOURCE_FILE, FetchRessourceFile, FetchRessourceFileSuccess } from "./ressource.actions";
+import { FETCH_INIT_TYPE_RESSOURCE, FetchInitTypeRessourceSuccess, FETCH_RESSOURCE, FetchRessource, FetchRessourceSuccess, ADD_RESSOURCE, AjoutRessource, ADD_TYPE_RESSOURCE, AjoutTypeRessource, FetchInitTypeRessource, UPLOAD_FILE, UploadFile, FETCH_RESSOURCE_FILE, FetchRessourceFile, FetchRessourceFileSuccess, DELETE_FILE, DeleteFile } from "./ressource.actions";
 import { typeRessource } from "../models/typeRessource.model";
 import { MatiereService } from "../services/matiere.service";
-import { searchMatiereSelected } from "../../../search/shared/store/search.selectors";
+import { getMatiereSelectedSelector } from "../../../search/shared/store/search.selectors";
 import { searchPossibility } from "../../../search/shared/models/searchPossibility.model";
 import { ressourceSelectedSelector, ressourceTypeSelectedSelector } from "./ressource.selectors";
 import { ressource } from "../models/ressource.model";
@@ -21,7 +21,7 @@ export class RessourceEffects {
     initRessourceType$ = this.action$.pipe(
         ofType(FETCH_INIT_TYPE_RESSOURCE),
         switchMap(() => {
-            return this.store.pipe(select(searchMatiereSelected));
+            return this.store.pipe(select(getMatiereSelectedSelector));
         }), 
         switchMap ((matiereSelected : searchPossibility) => {
             return this.matiereService.getTypeRessourceFromMatiere(matiereSelected);
@@ -72,6 +72,9 @@ export class RessourceEffects {
         ofType(UPLOAD_FILE), 
         switchMap ((action : UploadFile)=> {
             return this.matiereService.uploadFile(action.payload);
+        }), 
+        map ( (response :any ) => {
+            return null;
         })
     )
 
@@ -86,7 +89,16 @@ export class RessourceEffects {
         })
     )
 
-
+    @Effect()
+    deleteFile$ = this.action$.pipe(
+        ofType(DELETE_FILE), 
+        switchMap ((action : DeleteFile) => {
+            return this.matiereService.deleteFile(action.payload.link);
+        }),
+        map( (response: RessourceFile[]) => {
+            return new FetchRessourceFileSuccess(response);
+        })
+    )
 
     constructor (private action$: Actions, 
         private store: Store<State>,

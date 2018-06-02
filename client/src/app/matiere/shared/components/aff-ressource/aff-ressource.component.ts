@@ -6,7 +6,7 @@ import { ressourceSelectedSelector, ressourceFileSelector } from '../../store/re
 import { ressource } from '../../models/ressource.model';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatiereService } from '../../services/matiere.service';
-import { UploadFile, FetchRessourceFile } from '../../store/ressource.actions';
+import { UploadFile, FetchRessourceFile, DeleteFile } from '../../store/ressource.actions';
 import { RessourceFile } from '../../models/ressourceFile.model';
 
 @Component({
@@ -49,8 +49,11 @@ export class AffRessourceComponent implements OnInit {
   }
 
   public getSafeUrl(url : string) {
-    console.log ("GGOOO");
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
+  public deleteFile(file : RessourceFile) {
+    this.store.dispatch(new DeleteFile(file));
   }
 
 }

@@ -24,7 +24,7 @@ router.post('/addFile', (req, res) =>  {
 
 router.get('/downloadFile/:id', function(req, res, next) {
     fileDAO.downloadFile(req, res, req.params.id, result => {
-        res.sendfile(result);
+        res.sendFile(result);
     });
 
    

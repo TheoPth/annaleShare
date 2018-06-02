@@ -1,7 +1,7 @@
 module.exports = droit = {
-    Lire : 3,
-    Ajouter : 5,
-    Supprimer : 7,
-    Administrer : 11,
-    Banni : 13
+    Lire : 1,
+    Ajouter : 2,
+    Supprimer : 3,
+    Administrer : 4,
+    Banni : 0
 }

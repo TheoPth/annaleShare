@@ -28,12 +28,14 @@ let matiereDao = {
                 console.log(err);
             }
 
+                        
+            const name = files.file.name;
             const idRessource = parseInt(fields.idRessource);
             const nameUpload = getNameUpload(files.file.path);
             const type = fields.type;
             req.getConnection(function (err, connexion) {
-                let query = 'INSERT INTO File(idFile, type, idRessource) VALUES (?, ?, ?)';
-                connexion.query(query, [nameUpload, type, idRessource], function (err, rows, fields) {
+                let query = 'INSERT INTO File(idFile, type, idRessource, name) VALUES (?, ?, ?, ?)';
+                connexion.query(query, [nameUpload, type, idRessource, name], function (err, rows, fields) {
                     if (err) {
                         return res.status(500).json("Impossible de sauvegarder la file");
                     }
@@ -61,11 +63,10 @@ let matiereDao = {
 
     downloadFile: function (req, res, idFile, callback) {
         // this is where your file will be downloaded
+       
+        
         const fileName = idFile;
-        var filenamewithpath2 = path.join(__dirname, '/tmp/test/', fileName);
         var filenamewithpath = path.join(__dirname, '../../tmp/test/', fileName);
-        console.log (filenamewithpath2);
-        console.log(filenamewithpath);
 
         if (!fs.existsSync(filenamewithpath)) {
             console.log("File non trouvée");

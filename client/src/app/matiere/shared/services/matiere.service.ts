@@ -17,9 +17,6 @@ import { RessourceFile } from '../models/ressourceFile.model';
 })
 export class MatiereService {
     
-   
-   
-   
   constructor(public http : HttpClient) {};
     
   
@@ -52,7 +49,7 @@ export class MatiereService {
     return this.http.post<typeRessource[]>("/api/matiere/addTypeRessource", typeRessource);
   }
 
-  public uploadFile(file: UploadFileRessource) {
+  public uploadFile(file: UploadFileRessource) :any {
     const _formData = new FormData();
     _formData.append('file', file.file, file.file.name);
     _formData.append('idRessource', JSON.stringify(file.idRessource));
@@ -70,9 +67,14 @@ export class MatiereService {
       map ((sPos : any) => {
           return sPos.map(r => ({type : r.type, 
             link : r.idFile, 
-            idRessource : r.idRessource
+            idRessource : r.idRessource,
+            name : r.name
           }));
         })
       );;
-  } 
+  }
+
+  public deleteFile( linkFile : string): Observable<any> {
+    return this.http.delete<any>('/api/file/deleteFile/' + linkFile);
+  }
 }

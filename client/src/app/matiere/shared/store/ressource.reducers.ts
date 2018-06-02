@@ -7,7 +7,8 @@ import { RessourceAction,
     SET_TYPE_RESSOURCE,
     SET_RESSOURCE_SELECTED,
     FETCH_RESSOURCE_SUCCESS,
-    FETCH_RESSOURCE_FILE_SUCCESS} from './ressource.actions';
+    FETCH_RESSOURCE_FILE_SUCCESS,
+    } from './ressource.actions';
 
 export interface RessourceState {
     typeRessources: typeRessource[];

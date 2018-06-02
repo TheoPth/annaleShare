@@ -5,6 +5,7 @@ import { Droit } from "../models/droit.model";
 import { FETCH_SPECIALITE_SUCCESS, SET_SPECIALITE_SELECTED, FETCH_DROIT_SUCCESS, FETCH_MATIERE_SUCCESS, FETCH_USER_SUCCESS, SET_USER_SELECTED, FETCH_DROIT_USER_SELECTED_SUCCESS, MonitoringAction } from "./monitoring.actions";
 import { UserMonitor } from "../models/userMonitor.model";
 
+
 export interface MonitoringState {
     specialites: Donnee[];
     specialiteSelected : Donnee;

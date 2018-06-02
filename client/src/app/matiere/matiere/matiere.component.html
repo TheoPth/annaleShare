@@ -1,7 +1,7 @@
 <div class="container container-white">
   <div class="row">
-    <div class="col-12 col-sm-4">
-      <app-modal-ajout class="btn" [idReason]="'ajoutRessource'" [title]="'Ajouter un type de ressoure ?' " (pickedEvent)="addTypeRessource($event)"></app-modal-ajout>
+    <div class="col-12 col-sm-4 pt-2">
+      <app-modal-ajout *ngIf="possedeDroit('Ajouter')" class="btn" [idReason]="'ajoutRessource'" [title]="'Ajouter un type de ressoure ?' " (pickedEvent)="addTypeRessource($event)"></app-modal-ajout>
       <app-liste-clickable [listePick]="ressourceType$" [args]="['name']" [id]="'idTypeRessource'" (pickedEvent)="pickTypeRessource($event)"></app-liste-clickable>
     </div>
 

@@ -1,47 +1,66 @@
 import { Action } from  "@ngrx/store";
 import { searchPossibility } from "../models/searchPossibility.model";
+import { Droit } from "../../../monitoring/shared/models/droit.model";
 
-export const FETCH_POSSIBILITY = '[ searchPossibility ] fetch possibility';
-export const FETCH_POSSIBILITY_SUCCESS = '[ searchPossibility ] fetch possibility success';
-export const SET_PARENT_SELECTION = '[ searchPossibility ] set parentSelection';
-export const FETCH_SEARCH_POSSIBILITY = '[ searchPossibility ] fetch search possibility';
-export const FETCH_INIT_ECOLE = '[ searchPossibility ] fetch init ecole';
-export const FETCH_SPECIALITIES_FROM_SPECIALITE = '[ searchPossibility ] fetch specilite from specialite';
-export const FETCH_ECOLE_PARENT = '[ searchPossibility ] fetch ecole parent';
+
+
+export const FETCH_ECOLES = '[ searchPossibility ] fetch ecoles';
+export const FETCH_SPECIALITES = '[ searchPossibility ] fetch specialites';
+export const FETCH_MATIERES = '[ searchPossibility ] fetch matieres';
+
+export const FETCH_ECOLES_SUCCESS = '[ searchPossibility ] fetch ecoles success';
+export const FETCH_SPECIALITES_SUCCESS = '[ searchPossibility ] fetch specialites success';
+export const FETCH_MATIERES_SUCCESS = '[ searchPossibility ] fetch matieres success';
+
+export const SET_ECOLE_SELECTED = '[ searchPossibility ] set parent selected';
+export const SET_SPECIALITE_SELECTED = '[ searchPossibility ] set specialite selected';
 export const SET_MATIERE_SELECTED = '[ searchPossibility ] set matiere selected';
+
 export const ADD_ECOLE = '[ searchPossibility ] add ecole';
 export const ADD_MATIERE = '[ searchPossibility ] add matiere';
 export const ADD_SPECIALITE = '[ searchPossibility ] add spcecialite';
 
-export class FetchSearchPossibility implements Action {
-    readonly type = FETCH_SEARCH_POSSIBILITY;   
-};
+export const FETCH_DROIT = '[ searchPossibility ] fetch droit';
+export const FETCH_DROIT_SUCCESS = '[ searchPossibility ] fetch droit success';
 
-export class FetchPossibilitySuccess implements Action {
-    readonly type = FETCH_POSSIBILITY_SUCCESS;
-    constructor(public payload: searchPossibility[] ){}
-};
-
-export class SetParentSelection implements Action {
-    readonly type = SET_PARENT_SELECTION;
-    constructor(public payload: searchPossibility ){}
-};
-
-export class FetchInitEcole implements Action {
-    readonly type = FETCH_INIT_ECOLE;
+export class FetchEcoles implements Action {
+    readonly type = FETCH_ECOLES; 
 }
 
-export class FetchSpecialitiesFromSpecialite implements Action {
-    readonly type = FETCH_SPECIALITIES_FROM_SPECIALITE;
+export class FetchSpecialites implements Action {
+    readonly type = FETCH_SPECIALITES;
+}
+
+export class FetchMatieres implements Action {
+    readonly type = FETCH_MATIERES;
+}
+
+export class FetchEcolesSuccess implements Action {
+    readonly type = FETCH_ECOLES_SUCCESS;
+    constructor(public payload: searchPossibility[]) {}
+}
+
+export class FetchSpecialitesSuccess implements Action {
+    readonly type = FETCH_SPECIALITES_SUCCESS;
+    constructor(public payload: searchPossibility[]) {}
+}
+
+export class FetchMatieresSuccess implements Action {
+    readonly type = FETCH_MATIERES_SUCCESS;
+    constructor(public payload: searchPossibility[]) {}
+}
+
+export class SetEcoleSelected implements Action {
+    readonly type = SET_ECOLE_SELECTED;
     constructor(public payload: searchPossibility) {}
 }
 
-export class FetchEcoleParent implements Action {
-    readonly type = FETCH_ECOLE_PARENT;
+export class SetSpecialiteSelected implements Action {
+    readonly type = SET_SPECIALITE_SELECTED;
     constructor(public payload: searchPossibility) {}
 }
 
-export class SetMatiereSelection implements Action {
+export class SetMatiereSelected implements Action {
     readonly type = SET_MATIERE_SELECTED;
     constructor(public payload: searchPossibility) {}
 }
@@ -53,23 +72,37 @@ export class AddEcole {
 
 export class AddSpecialite {
     readonly type = ADD_SPECIALITE;
-    constructor(public payload: {nom : string, idEcole : number}){}
+    constructor(public payload: string){}
 }
-
 
 export class AddMatiere {
     readonly type = ADD_MATIERE;
-    constructor(public payload: {nom : string, idSpecialite : number}){}
+    constructor(public payload: string){}
 }
 
-export type SearchAction = SetParentSelection  |  
-FetchPossibilitySuccess | 
-FetchSearchPossibility | 
-FetchInitEcole |
-FetchSpecialitiesFromSpecialite |
-FetchEcoleParent |
-SetMatiereSelection |
+
+export class FetchDroit implements Action {
+    readonly type = FETCH_DROIT;   
+};
+
+export class FetchDroitSuccess implements Action {
+    readonly type = FETCH_DROIT_SUCCESS;
+    constructor(public payload: Droit[] ){}
+};
+
+export type SearchAction = 
+FetchEcoles  |  
+FetchSpecialites | 
+FetchMatieres | 
+FetchEcolesSuccess |
+FetchSpecialitesSuccess |
+FetchMatieresSuccess |
+SetEcoleSelected |
+SetSpecialiteSelected |
+SetMatiereSelected |
 AddEcole |
 AddSpecialite |
-AddMatiere;
+AddMatiere |
+FetchDroit |
+FetchDroitSuccess;
 
