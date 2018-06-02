@@ -3,6 +3,7 @@ import { AuthState, authReducer } from './reducers/auth.reducer';
 import { SearchState, SearchReducer } from '../../search/shared/store/search.reducers';
 import { RessourceReducer, RessourceState } from '../../matiere/shared/store/ressource.reducers';
 import { MatiereComponent } from '../../matiere/matiere/matiere.component';
+import { MonitoringState, MonitoringReducer } from '../../monitoring/shared/store/monitoring.reducers';
 
 /* Pour dire à quoi va ressembler le store, je vais galere pour mettre en place la  premiere interface
 Ici on a une parti identification. Un user (qui sera dans le state). Son token. C'est tout pour le moment.
@@ -19,11 +20,13 @@ export interface State {
     auth: AuthState;
     search: SearchState;
     matiere: RessourceState;
+    monitoring: MonitoringState;
 }
 
 
 export const reducersMap: ActionReducerMap<State> = {
     auth: authReducer,
     search : SearchReducer,
-    matiere : RessourceReducer
+    matiere : RessourceReducer,
+    monitoring : MonitoringReducer,
 }

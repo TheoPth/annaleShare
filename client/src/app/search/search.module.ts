@@ -21,8 +21,7 @@ import { CoreModule } from '../shared/modules/core.module';
     FormsModule
   ],
   declarations: [
-    SearchComponent,
-  
+    SearchComponent
   ]
 })
 export class SearchModule { }

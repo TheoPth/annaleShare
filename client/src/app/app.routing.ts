@@ -10,5 +10,6 @@ export const APP_ROUTING: Route[] = [
   { path: 'profile',  canActivate : [AuthGuard], loadChildren: 'app/profile/profile.module#ProfileModule'} ,
   { path: 'search', loadChildren: 'app/search/search.module#SearchModule'},
   { path: 'matiere', loadChildren: 'app/matiere/matiere.module#MatiereModule'},
+  { path : 'monitoring', loadChildren: 'app/monitoring/monitoring.module#MonitoringModule'},
   { path: "**", redirectTo:'signin'}
 ];

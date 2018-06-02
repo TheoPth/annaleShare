@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const router = require('express').Router();
 const fs = require('fs');
 const path = require('path');
+const droitTools = require('../../shared/tools/droit.tools');
 
 /* Permet de communiquer avec la base en rapport avec les droits */
 let droitDAO = {
@@ -41,12 +42,29 @@ let droitDAO = {
     getDroitUserSpecialite : function (req, res, idUser, idSpecialite, callback) {
         req.getConnection(function (err, connection) {
             let query = "SELECT * FROM `DroitUserSpecialite` WHERE idUser = ? and idSpecialite = ?";
-            connection.query(query, [idDroit, idUser, idSpecialite], function (err, rows, fields) {
+            connection.query(query, [idUser, idSpecialite], function (err, rows, fields) {
                 if (err) {
                     console.log(err);
                     res.status(500);
                 }
 
+                
+                callback(rows);
+            });
+        });
+    },
+
+
+    // Update le droit de l'utilisateur
+    updateDroitUser : function (req, res, idDroit, idUser, idSpecialite, callback) {
+        req.getConnection(function (err, connection) {
+            let query = "UPDATE DroitUserSpecialite SET idDroit= ? WHERE idUser = ? and idSpecialite = ?";
+            connection.query(query, [idDroit, idUser, idSpecialite], function (err, rows, fields) {
+                if (err) {
+                    console.log(err);
+                    res.status(500);
+                }
+                
                 callback(rows);
             });
         });

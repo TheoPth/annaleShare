@@ -1,4 +1,4 @@
-<div class="my-5 py-5" fxLayout="row" fxLayoutAlign="center center">
+<div class="signup-wrapper" fxLayout="row" fxLayoutAlign="center center">
     <mat-card>
       <mat-card-title>Inscription</mat-card-title>
       <mat-card-content>
@@ -12,9 +12,9 @@
           <mat-form-field>
             <input formControlName="password" matInput type="password" placeholder="mot de passe" />
           </mat-form-field>
-          <!-- Il faut mettre let pour mettre la valeur dans cette variable -->
+         
           <div *ngIf="error$ | async; let error">{{ error }}</div>
-          <button color="primary" (click)="submit()" mat-raised-button >inscription</button>
+          <button class="btn-green" (click)="submit()" mat-raised-button >Inscription</button>
         </form>
       </mat-card-content>
     </mat-card>

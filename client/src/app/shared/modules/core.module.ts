@@ -8,6 +8,7 @@ import { SignupComponent } from '../../components/signup/signup.component';
 import { SigninComponent } from '../../components/signin/signin.component';
 import { TopbarComponent } from '../../shared/components/topbar/topbar.component';
 import { ModalAjoutComponent } from '../../shared/components/modal-ajout/modal-ajout.component';
+import { ListeClickableComponent } from '../../shared/components/liste-clickable/liste-clickable.component';
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
@@ -30,7 +31,8 @@ const COMPONENTS = [
   SignupComponent,
   SigninComponent,
   TopbarComponent,
-  ModalAjoutComponent
+  ModalAjoutComponent,
+  ListeClickableComponent
 ];
 
 // Pas besoin de mettre common module, il est dans layout qui donne aussi material

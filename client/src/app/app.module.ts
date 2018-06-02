@@ -12,7 +12,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 // components
 import { AppComponent } from './app.component';
 
-
+import { HttpClientModule } from '@angular/common/http'
 // routing
 import { APP_ROUTING } from './app.routing';
 
@@ -26,6 +26,8 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { reducersMap } from './shared/store';
 import { AuthEffects} from './shared/store/effects/auth.effects';
 import { LayoutModule } from './shared/modules/layout.module';
+import {APP_BASE_HREF} from '@angular/common';
+import { MaterialModule } from './shared/modules/material.module';
 
 @NgModule({
 
@@ -35,6 +37,7 @@ import { LayoutModule } from './shared/modules/layout.module';
    
   ],
   imports: [
+    HttpClientModule,
     BrowserModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(APP_ROUTING),
@@ -46,9 +49,12 @@ import { LayoutModule } from './shared/modules/layout.module';
       name: 'Ngrx Photos',
       logOnly: environment.production
     }),
+    MaterialModule,
     CoreModule,
     LayoutModule,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  providers: [{provide: APP_BASE_HREF, useValue: '/'}]
+  
 })
 export class AppModule { }

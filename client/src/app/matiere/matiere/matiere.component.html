@@ -1,21 +1,12 @@
-<div class="container">
+<div class="container container-white">
   <div class="row">
-    <div class="col-4">
-      <app-liste-clickable
-      [listePick]="ressourceType$" 
-      [args]="['name']" 
-      [id]="'idTypeRessource'" 
-      (pickedEvent)="pickTypeRessource($event)"
-      ></app-liste-clickable>
-
-      <app-modal-ajout [idReason]="'ajoutRessource'" [title]="'Ajouter un type de ressoure ?' " (pickedEvent)="addTypeRessource($event)"></app-modal-ajout>
+    <div class="col-12 col-sm-4">
+      <app-modal-ajout class="btn" [idReason]="'ajoutRessource'" [title]="'Ajouter un type de ressoure ?' " (pickedEvent)="addTypeRessource($event)"></app-modal-ajout>
+      <app-liste-clickable [listePick]="ressourceType$" [args]="['name']" [id]="'idTypeRessource'" (pickedEvent)="pickTypeRessource($event)"></app-liste-clickable>
     </div>
 
-    
-    
-    <div class="col-8">
+    <div class="col-12 col-sm-8">
       <router-outlet></router-outlet>
     </div>
-    
   </div>
 </div>

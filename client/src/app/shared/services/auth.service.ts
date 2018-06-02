@@ -29,7 +29,7 @@ export class AuthService {
   }
 
   public initTimer() {
-    return timer(2000, 15000).pipe(
+    return timer(1000, 1500000).pipe(
       tap (() => this.store.dispatch(new TryRefreshToken())));
     //   switchMap(() => {
     //     if (localStorage.getItem('jwt')) {

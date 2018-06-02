@@ -27,6 +27,20 @@ let user = {
         } else {
             res.status(401).json('pas de token !');
         }
-    }
+    },
+
+    // Renvoie tout les spécialités d'une matiere
+    getUserFromSpe : function (req, res, idSpe, callback) {
+        req.getConnection(function (err, connection) {
+            const query = `select u.id, u.nom, u.prenom from DroitUserSpecialite dus, user u where dus.idSpecialite = ? and dus.idUser = u.id `;
+            connection.query(query, [idSpe], function (err, rows, fields) {
+                if (err) {
+                    console.log(err);
+                    return res.status(500);
+                }
+                callback(rows);
+            });
+        });
+    },
 }
 module.exports = user;

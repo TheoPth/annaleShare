@@ -1,4 +1,4 @@
-<div class="my-5 py-5" fxLayout="row" fxLayoutAlign="center center">
+<div class="signin-wrapper" fxLayout="row" fxLayoutAlign="center center">
   <mat-card>
     <mat-card-title>Connexion</mat-card-title>
     <mat-card-content>
@@ -10,7 +10,7 @@
           <input formControlName="password" matInput type="password" placeholder="mot de passe" />
         </mat-form-field>
         <div style="color:red;" *ngIf="error$ | async; let error">{{ error }}</div>
-        <button color="primary" (click)="submit()" mat-raised-button >Connexion</button>
+        <button class="btn-green" (click)="submit()" mat-raised-button >Connexion</button>
       </form>
     </mat-card-content>
   </mat-card>

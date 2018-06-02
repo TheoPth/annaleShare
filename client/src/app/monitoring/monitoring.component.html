@@ -1,1 +1,78 @@
 
+<div class="container container-white p-3">
+    <div class="row">
+        <div class="col-md-6 col-xs-12">
+            <div class="row">
+                
+                <div class="col-lg-12">
+                    <h3>Mes spécialités :</h3>
+                    <button (click)="afficheSpe(spe)"
+                        *ngFor="let spe of (specialites$ | async)" 
+                        type="button" 
+                        class="btn btn-outline-info btn-rounded waves-effect col-lg-3 col-sm-6 mr-0 ml-0">{{ spe.nom }}
+                    </button>
+                </div>
+                
+                <div class="col-lg-12">
+                    <h3>Mes droits :</h3>
+
+                    <ul class="list-group">
+                        <li *ngFor="let droit of droits$ | async " class="list-group-item ">
+                            {{ droit.intitule }}
+                            <i [appPossedeDroit]="droit.estAcquis" class="material-icons float-right">
+                                close
+                            </i>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-12">
+            
+            <ul class="list-group">
+                <h3>Les matières :</h3>
+                <li *ngFor="let matiere of matieres$ | async" class="list-group-item ">
+                    {{ matiere.nom }}
+                    <i class="material-icons float-right pointer">
+                        delete
+                    </i>
+                    <!-- <button class="btn btn-danger" (click)="supprimerMatiere(matiere)" *ngIf="peutFaire(7)">
+                        
+                    </button> -->
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+<div class="container container-white p-3 mb-4">
+    <div class="row">
+        <div class="col-6">
+            <h3>Panel Admin</h3>
+
+                <ul class="list-group">
+                    <li *ngFor="let user of users$ | async " class="list-group-item pointer" (click)="setUserActif(user)">
+                        {{ user.nom }}
+                        <i class="material-icons float-right">
+                            edit
+                        </i>
+                    </li>
+                </ul>
+               
+        </div>
+    
+
+        <div class="col-6" *ngIf="userSelected">
+            <h3>Droits de : {{userSelected?.nom}}</h3>
+            <ul class="list-group">
+                <li *ngFor="let userSelectedDroit of usersSelectedDroits$ | async " class="pointer list-group-item ">
+                    {{ userSelectedDroit.intitule }}
+                    <i [appCheckboxDroit]="userSelectedDroit.estAcquis" class=" material-icons float-right" (click)="toggleDroit(userSelectedDroit)">
+                        close
+                    </i>
+               </li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,23 +1,84 @@
 <div class="container">
-  <div class="row">
-    <h1>{{typeAct}}</h1>
-  </div>
+    <div class="row">
+        <div class="col-12 col-md-4">
+            <div class="container container-white">
+              <div class="row">
+                <div class="col-12">
+                  <span class="float-right">
+                      <app-modal-ajout [idReason]="'ajout' + typeAct"
+                      [title]="'Ajouter : ' + typeAct "
+                      (pickedEvent)="ajouter($event)">
+                    </app-modal-ajout>
+                  </span>
+                  <h3 class="text-center mt-1">{{typeAct}}</h3>
+                  <hr>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                    <button (click)="choose(searchPossibility)"
+                      *ngFor="let searchPossibility of (search$ | async)" 
+                      type="button" 
+                      class="btn btn-search waves-effect col-12 mt-2">
+                      {{ searchPossibility.wording }}
+                    </button>
+                </div>
+              </div>
+            </div>
+        </div>
+          <div class="col-12 col-md-4">
+              <div class="container container-white">
+                <div class="row">
+                  <div class="col-12">
 
-  <div class="row">
-    <button class="btn btn-success" (click)="precedent()"> Précédent </button>
-    <app-modal-ajout [idReason]="'ajout' + typeAct"
-    [title]="'Ajouter : ' + typeAct "
-    (pickedEvent)="ajouter($event)"></app-modal-ajout>
-  </div>
-  <div class="row">
-      <button (click)="choose(searchPossibility)"
-        *ngFor="let searchPossibility of (search$ | async)" 
-        type="button" 
-        class="btn btn-outline-info btn-rounded waves-effect col-lg-3 col-sm-6 mr-0 ml-0">{{ searchPossibility.wording }}
-      </button>
-  </div>
-  <hr>
+                    <span class="float-right">
+                        <app-modal-ajout [idReason]="'ajout' + typeAct"
+                        [title]="'Ajouter : ' + typeAct "
+                        (pickedEvent)="ajouter($event)">
+                      </app-modal-ajout>
+                    </span>
+                    <h3 class="text-center mt-1">Section</h3>
+                    <hr>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                      <button (click)="choose(searchPossibility)"
+                        *ngFor="let searchPossibility of (search$ | async)" 
+                        type="button" 
+                        class="btn btn-search waves-effect col-12 mt-2">
+                        {{ searchPossibility.wording }}
+                      </button>
+                  </div>
+                </div>
+              </div>
+          </div>
+            <div class="col-12 col-md-4">
+                <div class="container container-white">
+                  <div class="row">
+                    <div class="col-12">
+  
+                      <span class="float-right">
+                          <app-modal-ajout [idReason]="'ajout' + typeAct"
+                          [title]="'Ajouter : ' + typeAct "
+                          (pickedEvent)="ajouter($event)">
+                        </app-modal-ajout>
+                      </span>
+                      <h3 class="text-center mt-1">Matière</h3>
+                      <hr>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                        <button (click)="choose(searchPossibility)"
+                          *ngFor="let searchPossibility of (search$ | async)" 
+                          type="button" 
+                          class="btn btn-search waves-effect col-12 mt-2">
+                          {{ searchPossibility.wording }}
+                        </button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
 </div>
-
-
-

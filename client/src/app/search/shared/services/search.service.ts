@@ -13,8 +13,6 @@ export class SearchService {
     
   constructor(public http : HttpClient) {}
 
-  
-
   public getPossibility(searchPossibility: searchPossibility): Observable<searchPossibility[]> {
     // Recherche de dossier école
     switch (searchPossibility.type) {

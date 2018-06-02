@@ -6,7 +6,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { RessourceReducer } from './shared/store/ressource.reducers';
 import { RessourceEffects } from './shared/store/ressource.effect';
 import { MATIERE_ROUTES } from './matiere.route';;
-import { ListeClickableComponent } from './shared/components/liste-clickable/liste-clickable.component'
 import { FormsModule } from '@angular/forms';
 import { RessourcesComponent } from './shared/components/ressources/ressources.component';
 import { AffRessourceComponent } from './shared/components/aff-ressource/aff-ressource.component';
@@ -24,10 +23,11 @@ import { CommonModule } from '@angular/common';
     EffectsModule.forFeature([RessourceEffects]),
     FormsModule
   ],
-  declarations: [MatiereComponent,
-    ListeClickableComponent, 
+  declarations: [
+    MatiereComponent,
     RessourcesComponent, 
     AffRessourceComponent, 
-    SafePipe]
+    SafePipe
+  ]
 })
 export class MatiereModule { }

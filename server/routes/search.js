@@ -3,7 +3,7 @@ const fs = require('fs');
 const searchDAO = require('./DAO/searchDAO');
 const droitDAO = require('./DAO/droitDAO');
 const userDAO = require('./DAO/userDAO');
-const droit = require('../enum/droit.enum');
+const droit = require('../shared/enum/droit.enum');
 
 
 // Renvoie toute les spécialités d'une école

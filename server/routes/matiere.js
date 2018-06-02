@@ -2,6 +2,7 @@ const router = require('express').Router();
 const fs = require('fs');
 const matiereDAO = require('./DAO/matiereDAO');
 const IncomingForm = require('formidable').IncomingForm;
+const userDAO = require('./DAO/userDAO');
 
 
 // Renvoie toute les types de ressources créé
@@ -20,18 +21,21 @@ router.get('/getRessourceFromTypeRessource/:idTypeRessource', (req, res) => {
     });
 });
 
+// Ajoute une ressource de type pdf 
 router.post('/addRessource', (req, res) => {
     matiereDAO.addRessource(req, res, req.body, result => {
         res.status(200).json(result);
     });
 });
 
-
+// Ajout un dossier pour les ressources
 router.post('/addTypeRessource', (req, res) => {
     matiereDAO.addTypeRessource(req, res, req.body, result => {
         res.status(200).json(result);
     });
 });
+
+
 
 module.exports = router;
 

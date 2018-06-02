@@ -3,6 +3,7 @@ const router = require('express').Router();
 const fs = require('fs');
 const uuidv1 = require('uuid/v1');
 
+/* Toutes les fonctions en rapport avec les tables ECOLE, SPECIALITE, MATIERE */
 let userDaoModule = {
     getSpecialite: function (req, idEcole, callback) {
         req.getConnection(function (err, connection) {
@@ -18,9 +19,6 @@ let userDaoModule = {
 
 
     getMatiere: function (req, idSpecialite, callback) {
-
-
-
         req.getConnection(function (err, connection) {
             connection.query('select * from Matiere where idSpecialite = ?', [idSpecialite], function (err, rows, fields) {
                 if (err) {
@@ -92,7 +90,6 @@ let userDaoModule = {
 
     addSpecialite: function (req, res, specialite, callback) {
 
-
         req.getConnection(function (err, connection) {
             const query1 = `INSERT INTO Specialite(idSpecialite, nom, idEcole) VALUES (NULL, ?, ?)`;
             connection.query(query1, [specialite.nom, specialite.idEcole], function (err, rows, fields) {
@@ -129,7 +126,7 @@ let userDaoModule = {
                 callback(rows);
             });
         });
-    }
+    },
 
 };
 
