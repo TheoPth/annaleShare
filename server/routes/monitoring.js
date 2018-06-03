@@ -82,18 +82,26 @@ router.get('/getDroitUserSpe/:idSpe', userDAO.isLoggedIn, (req, res) => {
 router.get('/getDroitUserSpe/:idSpe/:idUser', userDAO.isLoggedIn, (req, res) => {
     // Soit il récupère ses propres droits, soit il a les droits de monitoring
     // sur la spécialité
+    console.log(req.params.idUser)
     let idSpe = req.headers.specialitemonitoring;
-    if (idSpe || req.params.idUser == req.user.id) {
+    if (req.params.idUser == req.user.id) {
+        droitDAO.getDroitUserSpecialite(req, res, req.params.idUser, idSpe, result => {
+            // Recupere le code droit, il faut le decoder
+            res.status(200).json(droitTools.getDroits(result[0].idDroit));
+        });
+    }else if (idSpe) {
         userDAO.checkDroit(req, res, idSpe, 4, aDroit => {
             if (aDroit) {
                 droitDAO.getDroitUserSpecialite(req, res, req.params.idUser, idSpe, result => {
                     // Recupere le code droit, il faut le decoder
                     res.status(200).json(droitTools.getDroits(result[0].idDroit));
                 });
+               
             } else {
                 return res.status(403).json("Vous ne pouvez pas réaliser cette action.");
             }
         })
+
     } else {
         return res.status(403).json("Vous ne pouvez pas réaliser cette action.");
     }
@@ -104,7 +112,6 @@ router.get('/getDroitUserSpe/:idSpe/:idUser', userDAO.isLoggedIn, (req, res) => 
 
 router.post('/setDroitUser', userDAO.isLoggedIn, (req, res) => {
     const idUser = req.body.idUser;
-    const idSpecialite = req.body.idSpe;
     const idDroit = req.body.idDroit;
 
     let idSpe = req.headers.specialitemonitoring;
@@ -126,15 +133,25 @@ router.post('/setDroitUser', userDAO.isLoggedIn, (req, res) => {
 
 router.post('/unsetDroitUser', userDAO.isLoggedIn, (req, res) => {
     const idUser = req.body.idUser;
-    const idSpe = req.body.idSpe;
-    const idDroit = req.body.idDroit;
+    let idDroit = req.body.idDroit;
     
-    
-    // On vérifie que le user possede bien ce droit et qu'il est inscrit
-    let idDroitPrec = droitTools.getUndoDroit(idDroit);
-    droitDAO.updateDroitUser(req, res, idDroitPrec, idUser, idSpe, result => {
-        return res.status(200).json();
-    });
+    idDroit = droitTools.getUndoDroit(idDroit);
+
+    let idSpe = req.headers.specialitemonitoring;
+    if (idSpe) {
+        userDAO.checkDroit(req, res, idSpe, 4, aDroit => {
+            if (aDroit) {
+                console.log (idDroit);
+                droitDAO.updateDroitUser(req, res, idDroit, idUser, idSpe, result => {
+                    return res.status(200).json();
+                });
+            } else {
+                return res.status(403).json("Vous ne pouvez pas réaliser cette action.");
+            }
+        })
+    } else {
+        return res.status(403).json("Vous ne pouvez pas réaliser cette action.");
+    }
     
 });
 

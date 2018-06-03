@@ -26,6 +26,8 @@ import { AuthGuard } from '../guards/auth.guard';
 // Module
 import { RouterModule } from '@angular/router';
 import { SpeInterceptor } from '../../monitoring/shared/interceptors/spe-interceptor';
+import { MatiereInterceptor } from '../../matiere/shared/interceptors/matiere.interceptor';
+
 
 
 const COMPONENTS = [
@@ -60,6 +62,11 @@ const COMPONENTS = [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: SpeInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: MatiereInterceptor,
       multi: true
     },
     AuthService,

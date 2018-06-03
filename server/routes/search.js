@@ -48,7 +48,7 @@ router.post('/addSpecialite', userDAO.isLoggedIn,  (req, res) => {
     // Ajoute la spé
     searchDAO.addSpecialite(req, res, req.body.idEcole, req.body.nomSpe,  result => {
         // Donne les droits à la l'utilisateur pour la spé qu'il a créé
-       
+        console.log(req.user);
         droitDAO.addDroitSpecialite(req, res, req.user.id, result.maxIdSpecialite, droit.Administrer, result => {
             res.status(200).json(result);
         });

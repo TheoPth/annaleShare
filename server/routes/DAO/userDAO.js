@@ -54,6 +54,7 @@ let user = {
         
         this.getDroit(req, res, idSpe, droit => {
             if (droit) {
+                
                 callback (droit.idDroit >= lvlDroitMini);
             } else {
                 callback(false);
