@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 const mysql      = require('mysql');
 
+const conf = require('../conf.json');
+
 var app = express();
 const index = require('./routes/index');
 
@@ -15,12 +17,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
 myConnection = require('express-myconnection'); // express-myconnection module
 
-dbOptions = {
-      host: 'localhost',
-      user: 'root',
-      password: 'mysqlvitech',
-      database: 'image'
-};
+dbOptions = conf.bd;
 app.use(myConnection(mysql, dbOptions, 'single')); 
 
 app.use(index);

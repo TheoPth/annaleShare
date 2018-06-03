@@ -2,4 +2,4 @@
 
 <app-liste-clickable [listePick]="ressources$" [args]="['nom']" [id]="'idRessource'" (pickedEvent)="pickRessource($event)"></app-liste-clickable>
 
-<app-modal-ajout [idReason]="'AjoutTypeRessource'" [title]="'Ajouter : ' + typeRessourceSelected?.name + ' ?' " (pickedEvent)="addRessource($event)"></app-modal-ajout>
+<app-modal-ajout *ngIf="possedeDroit('Ajouter')" [idReason]="'AjoutTypeRessource'" [title]="'Ajouter : ' + typeRessourceSelected?.name + ' ?' " (pickedEvent)="addRessource($event)"></app-modal-ajout>

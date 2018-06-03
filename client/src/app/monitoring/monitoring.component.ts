@@ -60,7 +60,7 @@ export class MonitoringComponent implements OnInit {
       this.speSelected = spe;
     })
    
-    // Initialisation pour éviter les undifineds
+    // Initialisation 
     this.users$ = this.store.pipe(select(usersSelector));
 
     // Récupération des droits de l'utilisateur selectionné
@@ -83,14 +83,16 @@ export class MonitoringComponent implements OnInit {
     
     this.droits$.subscribe( (val : Droit[]) => {
       this.droits = val;
+
+      // Recupétation des utilisateurs qui utlisent aussi la spé, uniquement si on a les doits
+      if (this.possedeDroit('Administrer')) {
+        this.store.dispatch(new FetchUser());
+      }
     });
 
     // Récup des matières
     this.store.dispatch(new FetchMatiere());
     this.matieres$ = this.store.pipe(select(matieresSelector));
-
-    // Recupétation des utilisateurs qui utlisent aussi la spé
-    this.store.dispatch(new FetchUser());
   }
 
   // Renvoie true si le droit associé est acqui, false sinon

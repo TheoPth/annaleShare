@@ -86,7 +86,7 @@ let droitDAO = {
         callback (token);
     },
 
-    joinTeam : function (req, res, link, callback) {
+    decodeLink : function (req, res, link, callback) {
         // Création du token pour le lien de partage
         jwt.verify(link, RSA_PUBLIC_KEY, (err, decoded) => {
             if (err) {
@@ -96,9 +96,8 @@ let droitDAO = {
             }
             const sub = JSON.parse(decoded.sub);
 
-            this.addDroitSpecialite(req, res, req.user.id, sub.s, sub.d, result =>{
-                res.status(200);
-            }); 
+            callback({idUser : req.user.id, idSpecialite : sub.s,idDroit : sub.d});
+            
         })
     }
 

@@ -1,0 +1,9 @@
+{
+    "bd" : {
+        "host": "localhost",
+        "user": "root",
+        "password": "mysqlvitech",
+        "database": "image"
+    }
+    
+}

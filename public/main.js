@@ -210,7 +210,7 @@ __webpack_require__.r(__webpack_exports__);
 var APP_ROUTING = [
     { path: 'signup', component: _components_signup_signup_component__WEBPACK_IMPORTED_MODULE_0__["SignupComponent"] },
     { path: 'signin', component: _components_signin_signin_component__WEBPACK_IMPORTED_MODULE_1__["SigninComponent"] },
-    { path: 'search', loadChildren: 'app/search/search.module#SearchModule' },
+    { path: 'search', canActivate: [_shared_guards_auth_guard__WEBPACK_IMPORTED_MODULE_2__["AuthGuard"]], loadChildren: 'app/search/search.module#SearchModule' },
     { path: 'matiere', canActivate: [_shared_guards_auth_guard__WEBPACK_IMPORTED_MODULE_2__["AuthGuard"]], loadChildren: 'app/matiere/matiere.module#MatiereModule' },
     { path: 'monitoring', canActivate: [_shared_guards_auth_guard__WEBPACK_IMPORTED_MODULE_2__["AuthGuard"]], loadChildren: 'app/monitoring/monitoring.module#MonitoringModule' },
     { path: "**", redirectTo: 'signup' }
@@ -1570,6 +1570,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
 /* harmony import */ var _ngrx_store__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ngrx/store */ "./node_modules/@ngrx/store/fesm5/store.js");
 /* harmony import */ var _store_selectors_auth_selectors__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../store/selectors/auth.selectors */ "./src/app/shared/store/selectors/auth.selectors.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1583,18 +1584,26 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var AuthGuard = /** @class */ (function () {
-    function AuthGuard(store) {
+    function AuthGuard(store, router) {
         this.store = store;
+        this.router = router;
     }
     AuthGuard.prototype.canActivate = function (next, state) {
-        return this.store.pipe(
-        // Pour ne pas ajouter de subscrition
-        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["take"])(1), Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_2__["select"])(_store_selectors_auth_selectors__WEBPACK_IMPORTED_MODULE_3__["isLoggedIn"]));
+        var _this = this;
+        var isLog;
+        return this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_2__["select"])(_store_selectors_auth_selectors__WEBPACK_IMPORTED_MODULE_3__["isLoggedIn"])).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (isLogIn) {
+            if (!isLogIn) {
+                _this.router.navigate(['/signin']);
+            }
+            return isLogIn;
+        }));
     };
     AuthGuard = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
-        __metadata("design:paramtypes", [_ngrx_store__WEBPACK_IMPORTED_MODULE_2__["Store"]])
+        __metadata("design:paramtypes", [_ngrx_store__WEBPACK_IMPORTED_MODULE_2__["Store"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"]])
     ], AuthGuard);
     return AuthGuard;
 }());

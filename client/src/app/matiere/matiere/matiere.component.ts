@@ -15,17 +15,18 @@ import { searchPossibility } from '../../search/shared/models/searchPossibility.
 import { Droit } from '../../monitoring/shared/models/droit.model';
 import { FetchDroit } from '../../search/shared/store/search.actions';
 
-
 @Component({
   selector: 'app-matiere',
   templateUrl: './matiere.component.html',
-  styleUrls: ['./matiere.component.css']
+  styleUrls: ['./matiere.component.css'],
 })
 export class MatiereComponent implements OnInit {
   public ressourceType$: Observable<typeRessource[]>;
   public matiere : searchPossibility;
   public droitsUser$ : Observable<Droit[]>;
   public droitUser : Droit[];
+
+  public currentState: string ='shown';
   
   constructor(
     private store : Store<State>,

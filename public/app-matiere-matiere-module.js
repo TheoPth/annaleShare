@@ -160,6 +160,7 @@ var MatiereComponent = /** @class */ (function () {
         var _this = this;
         this.store = store;
         this.router = router;
+        this.currentState = 'shown';
         this.ressourceType$ = this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["select"])(_shared_store_ressource_selectors__WEBPACK_IMPORTED_MODULE_3__["ressourceTypeSelector"]));
         var matiere$ = this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["select"])(_search_shared_store_search_selectors__WEBPACK_IMPORTED_MODULE_5__["getMatiereSelectedSelector"]));
         matiere$.subscribe(function (val) { return _this.matiere = val; });
@@ -199,7 +200,7 @@ var MatiereComponent = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'app-matiere',
             template: __webpack_require__(/*! ./matiere.component.html */ "./src/app/matiere/matiere/matiere.component.html"),
-            styles: [__webpack_require__(/*! ./matiere.component.css */ "./src/app/matiere/matiere/matiere.component.css")]
+            styles: [__webpack_require__(/*! ./matiere.component.css */ "./src/app/matiere/matiere/matiere.component.css")],
         }),
         __metadata("design:paramtypes", [_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["Store"],
             _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"]])
@@ -229,7 +230,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <h2>{{ressource.nom}}</h2>\n  <hr>\n  <div class=\"row\">\n    <div class=\"col-12\" *ngFor=\"let file of ressourceFile$ | async \">\n      <span>{{file.name}}</span>\n      <i class=\"material-icons float-right\" (click)=\"deleteFile(file)\" style=\"color :red\">\n        delete\n      </i>\n      <object [data]='(\"/api/file/downloadFile/\" + file.link) | safe' type=\"application/pdf\" width=\"100%\" height=\"400px\" class=\"mt-3\">\n        <p>Alternative text - include a link\n          <a href=\"myfile.pdf\">to the PDF!</a>\n        </p>\n      </object>\n    </div>\n  </div>\n</div>\n\n<input type=\"file\" (change)=fileEvent($event)>"
+module.exports = "<div class=\"container\">\n  <h2>{{ressource.nom}}</h2>\n  <hr>\n  <div class=\"row\">\n    <div class=\"col-12\" *ngFor=\"let file of ressourceFile$ | async \">\n      <span>{{file.name}}</span>\n      <i *ngIf=\"possedeDroit('Supprimer')\" class=\"material-icons float-right\" (click)=\"deleteFile(file)\" style=\"color :red\">\n        delete\n      </i>\n      <object [data]='(\"/api/file/downloadFile/\" + file.link) | safe' type=\"application/pdf\" width=\"100%\" height=\"400px\" class=\"mt-3\">\n        <p>Alternative text - include a link\n          <a href=\"myfile.pdf\">to the PDF!</a>\n        </p>\n      </object>\n    </div>\n  </div>\n</div>\n\n<input type=\"file\" (change)=fileEvent($event)>"
 
 /***/ }),
 
@@ -250,6 +251,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_matiere_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../services/matiere.service */ "./src/app/matiere/shared/services/matiere.service.ts");
 /* harmony import */ var _store_ressource_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../store/ressource.actions */ "./src/app/matiere/shared/store/ressource.actions.ts");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _search_shared_store_search_selectors__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../search/shared/store/search.selectors */ "./src/app/search/shared/store/search.selectors.ts");
+/* harmony import */ var _monitoring_shared_store_monitoring_actions__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../monitoring/shared/store/monitoring.actions */ "./src/app/monitoring/shared/store/monitoring.actions.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -259,6 +262,8 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
+
 
 
 
@@ -279,12 +284,17 @@ var AffRessourceComponent = /** @class */ (function () {
         var _this = this;
         this.ressource$.subscribe(function (res) {
             _this.ressource = res;
-            // Get all link for ressources
+            // Get all links for ressources
             _this.store.dispatch(new _store_ressource_actions__WEBPACK_IMPORTED_MODULE_5__["FetchRessourceFile"](res.idRessource));
         });
         this.ressourceFile$.subscribe(function (val) {
             _this.ressourceFile = val;
         });
+        this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["select"])(_search_shared_store_search_selectors__WEBPACK_IMPORTED_MODULE_7__["getDroitsSpeSelectedSelector"])).subscribe(function (droits) {
+            _this.droitUser = droits;
+        });
+        // Récupération des droits du user sur cette spécialité
+        this.store.dispatch(new _monitoring_shared_store_monitoring_actions__WEBPACK_IMPORTED_MODULE_8__["FetchDroit"]());
     };
     AffRessourceComponent.prototype.fileEvent = function ($event) {
         var fileSelected = $event.target.files[0];
@@ -297,6 +307,18 @@ var AffRessourceComponent = /** @class */ (function () {
     AffRessourceComponent.prototype.deleteFile = function (file) {
         this.store.dispatch(new _store_ressource_actions__WEBPACK_IMPORTED_MODULE_5__["DeleteFile"](file));
         this.router.navigateByUrl('/matiere/ressources');
+    };
+    // Vérifie que l'utilisateur a bien les droits pour ajouter
+    AffRessourceComponent.prototype.possedeDroit = function (nomDroit) {
+        var possedeDroit = false;
+        if (this.droitUser) {
+            this.droitUser.forEach(function (droit) {
+                if (droit.intitule == nomDroit) {
+                    possedeDroit = droit.estAcquis;
+                }
+            });
+        }
+        return possedeDroit;
     };
     AffRessourceComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -334,7 +356,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h1>{{typeRessourceSelected.name}}</h1>\n\n<app-liste-clickable [listePick]=\"ressources$\" [args]=\"['nom']\" [id]=\"'idRessource'\" (pickedEvent)=\"pickRessource($event)\"></app-liste-clickable>\n\n<app-modal-ajout [idReason]=\"'AjoutTypeRessource'\" [title]=\"'Ajouter : ' + typeRessourceSelected?.name + ' ?' \" (pickedEvent)=\"addRessource($event)\"></app-modal-ajout>"
+module.exports = "<h1>{{typeRessourceSelected.name}}</h1>\n\n<app-liste-clickable [listePick]=\"ressources$\" [args]=\"['nom']\" [id]=\"'idRessource'\" (pickedEvent)=\"pickRessource($event)\"></app-liste-clickable>\n\n<app-modal-ajout *ngIf=\"possedeDroit('Ajouter')\" [idReason]=\"'AjoutTypeRessource'\" [title]=\"'Ajouter : ' + typeRessourceSelected?.name + ' ?' \" (pickedEvent)=\"addRessource($event)\"></app-modal-ajout>"
 
 /***/ }),
 
@@ -353,6 +375,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _store_ressource_selectors__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../store/ressource.selectors */ "./src/app/matiere/shared/store/ressource.selectors.ts");
 /* harmony import */ var _store_ressource_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../store/ressource.actions */ "./src/app/matiere/shared/store/ressource.actions.ts");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _search_shared_store_search_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../search/shared/store/search.actions */ "./src/app/search/shared/store/search.actions.ts");
+/* harmony import */ var _search_shared_store_search_selectors__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../search/shared/store/search.selectors */ "./src/app/search/shared/store/search.selectors.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -362,6 +386,8 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
+
 
 
 
@@ -380,6 +406,11 @@ var RessourcesComponent = /** @class */ (function () {
         this.typeRessourceSelected$.subscribe(function (val) {
             _this.typeRessourceSelected = val;
         });
+        this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["select"])(_search_shared_store_search_selectors__WEBPACK_IMPORTED_MODULE_6__["getDroitsSpeSelectedSelector"])).subscribe(function (droits) {
+            _this.droitUser = droits;
+        });
+        // Récupération des droits du user sur cette spécialité
+        this.store.dispatch(new _search_shared_store_search_actions__WEBPACK_IMPORTED_MODULE_5__["FetchDroit"]());
     };
     RessourcesComponent.prototype.pickRessource = function (choix) {
         this.store.dispatch(new _store_ressource_actions__WEBPACK_IMPORTED_MODULE_3__["SetRessourceSelected"](choix));
@@ -392,6 +423,18 @@ var RessourcesComponent = /** @class */ (function () {
         this.store.dispatch(new _store_ressource_actions__WEBPACK_IMPORTED_MODULE_3__["AjoutRessource"]({ idRessource: -1,
             nom: nomRessource,
             idTypeRessource: this.typeRessourceSelected.idTypeRessource }));
+    };
+    // Vérifie que l'utilisateur a bien les droits pour ajouter
+    RessourcesComponent.prototype.possedeDroit = function (nomDroit) {
+        var possedeDroit = false;
+        if (this.droitUser) {
+            this.droitUser.forEach(function (droit) {
+                if (droit.intitule == nomDroit) {
+                    possedeDroit = droit.estAcquis;
+                }
+            });
+        }
+        return possedeDroit;
     };
     RessourcesComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({

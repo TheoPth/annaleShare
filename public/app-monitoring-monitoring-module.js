@@ -73,7 +73,7 @@ var MonitoringComponent = /** @class */ (function () {
         this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["select"])(_shared_store_monitoring_selectors__WEBPACK_IMPORTED_MODULE_3__["specialitesSelectedSelector"])).subscribe(function (spe) {
             _this.speSelected = spe;
         });
-        // Initialisation pour éviter les undifineds
+        // Initialisation 
         this.users$ = this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["select"])(_shared_store_monitoring_selectors__WEBPACK_IMPORTED_MODULE_3__["usersSelector"]));
         // Récupération des droits de l'utilisateur selectionné
         this.usersSelectedDroits$ = this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["select"])(_shared_store_monitoring_selectors__WEBPACK_IMPORTED_MODULE_3__["droitUserSelectedSelector"]));
@@ -91,12 +91,14 @@ var MonitoringComponent = /** @class */ (function () {
         this.droits$ = this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["select"])(_shared_store_monitoring_selectors__WEBPACK_IMPORTED_MODULE_3__["droitsSelector"]));
         this.droits$.subscribe(function (val) {
             _this.droits = val;
+            // Recupétation des utilisateurs qui utlisent aussi la spé, uniquement si on a les doits
+            if (_this.possedeDroit('Administrer')) {
+                _this.store.dispatch(new _shared_store_monitoring_actions__WEBPACK_IMPORTED_MODULE_2__["FetchUser"]());
+            }
         });
         // Récup des matières
         this.store.dispatch(new _shared_store_monitoring_actions__WEBPACK_IMPORTED_MODULE_2__["FetchMatiere"]());
         this.matieres$ = this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["select"])(_shared_store_monitoring_selectors__WEBPACK_IMPORTED_MODULE_3__["matieresSelector"]));
-        // Recupétation des utilisateurs qui utlisent aussi la spé
-        this.store.dispatch(new _shared_store_monitoring_actions__WEBPACK_IMPORTED_MODULE_2__["FetchUser"]());
     };
     // Renvoie true si le droit associé est acqui, false sinon
     MonitoringComponent.prototype.possedeDroit = function (nomDroit) {
@@ -552,8 +554,8 @@ var MonitoringEffects = /** @class */ (function () {
         }));
         this.joinSpe$ = this.action$.pipe(Object(_ngrx_effects__WEBPACK_IMPORTED_MODULE_3__["ofType"])(_monitoring_actions__WEBPACK_IMPORTED_MODULE_4__["JOIN_SPECIALITE"]), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["switchMap"])(function (action) {
             return _this.monitoringService.joinTeam(action.payload);
-        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["map"])(function (lien) {
-            return new _monitoring_actions__WEBPACK_IMPORTED_MODULE_4__["FetchShareLinkSuccess"](lien);
+        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["switchMap"])(function (lien) {
+            return [new _monitoring_actions__WEBPACK_IMPORTED_MODULE_4__["FetchShareLinkSuccess"](lien), new _monitoring_actions__WEBPACK_IMPORTED_MODULE_4__["FetchSpecialite"]()];
         }));
     }
     __decorate([

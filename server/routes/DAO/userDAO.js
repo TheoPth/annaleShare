@@ -50,6 +50,7 @@ let user = {
 
     checkDroit : function (req, res, idSpe, lvlDroitMini, callback) {
         // Permet de vérifier que l'utilisateur outre-pass pas ses droits
+        // lvl Droit mini permet de vérifier que le user n'est
         
         this.getDroit(req, res, idSpe, droit => {
             if (droit) {
