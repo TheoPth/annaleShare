@@ -7,9 +7,8 @@ import { AuthGuard } from './shared/guards/auth.guard';
 export const APP_ROUTING: Route[] = [
   { path: 'signup' , component: SignupComponent},
   { path: 'signin', component: SigninComponent},
-  { path: 'profile',  canActivate : [AuthGuard], loadChildren: 'app/profile/profile.module#ProfileModule'} ,
   { path: 'search', loadChildren: 'app/search/search.module#SearchModule'},
-  { path: 'matiere', loadChildren: 'app/matiere/matiere.module#MatiereModule'},
-  { path : 'monitoring', loadChildren: 'app/monitoring/monitoring.module#MonitoringModule'},
-  { path: "**", redirectTo:'signin'}
+  { path: 'matiere',  canActivate : [AuthGuard], loadChildren: 'app/matiere/matiere.module#MatiereModule'},
+  { path : 'monitoring',  canActivate : [AuthGuard], loadChildren: 'app/monitoring/monitoring.module#MonitoringModule'},
+  { path: "**", redirectTo:'signup'}
 ];

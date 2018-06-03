@@ -20,6 +20,7 @@ const initialState = {
 
 // Fonction qui est pure on ne pas modifier les parametres
 export function authReducer(state: AuthState = initialState, action: AuthActions) {
+    
     switch (action.type) {
         case SIGNIN_ERROR : {
             return {

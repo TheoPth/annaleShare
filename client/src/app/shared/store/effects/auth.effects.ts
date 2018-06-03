@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { AuthActions, TrySignup, SignupSuccess, 
-  SignupError, TRY_SIGNUP, SIGNUP_ERROR, SIGNUP_SUCCESS, SigninSuccess, 
-  SigninError, TRY_SIGNIN, TrySignin, TRY_REFRESH_TOKEN, 
-  LOGOUT, TRY_FETCH_CURRENT_USER, SetCurrentUser, TryFetchCurrentUser } from '../action/auth.actions';
+import {
+  AuthActions, TrySignup, SignupSuccess,
+  SignupError, TRY_SIGNUP, SIGNUP_ERROR, SIGNUP_SUCCESS, SigninSuccess,
+  SigninError, TRY_SIGNIN, TrySignin, TRY_REFRESH_TOKEN,
+  LOGOUT, TRY_FETCH_CURRENT_USER, SetCurrentUser, TryFetchCurrentUser, SIGNIN_SUCCESS
+} from '../action/auth.actions';
 import { map, exhaustMap, catchError, tap, switchMap, withLatestFrom } from 'rxjs/operators';
 import { User } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
@@ -33,14 +35,13 @@ export class AuthEffects {
     // Permet de reconnaitre le nom de l'action
     ofType(TRY_SIGNUP),
     map((action: TrySignup) => action.payload),
-    
+
     // Permet de limiter à une inscription en même temps
     exhaustMap((user: User) =>
       this.authService
         .signup(user)
         .pipe(
           map(user => {
-            this.router.navigate['/signin'];
             return new SignupSuccess(user)
           }),
           catchError(error => of(new SignupError(error)))
@@ -61,26 +62,27 @@ export class AuthEffects {
     map((action: TrySignin) => action.payload),
     // Permet de limiter à une inscription en meme temps
     switchMap((credentials: { email: string, password: string }) => {
-      return this.authService.signin(credentials);
-    }),
-    map((token: string) => {
-      localStorage.setItem('token', token);
-      return new SigninSuccess(token);
-    }),
-    catchError((err: any) => {
-      return of(new SigninError(err));
-    })
-  );
+      return this.authService.signin(credentials).pipe(
+        map((token: string) => {
+          localStorage.setItem('token', token);
+          return new SigninSuccess(token);
+        }),
+        catchError((err: any) => {
+          return of(new SigninError(err.error));
+        })
+      )
+    }));
 
   // pour que ngRx ne s'attende pas à rencoyer une nouvelle action
-  @Effect({ dispatch: false})
+  @Effect({ dispatch: false })
   signinSuccess$ = this.actions$.pipe(
-    ofType(TRY_SIGNIN),
+    ofType(SIGNIN_SUCCESS),
     // Permet de faire un effet de bord lors de l'emission de l'observable
-    tap( () => {
+    tap(() => {
+      
       if (typeof this.subscription === 'undefined' || this.subscription.closed) {
         this.subscription = this.authService.initTimer().subscribe();
-        this.router.navigateByUrl('/');
+        //this.router.navigateByUrl('/search');
       }
     })
   );
@@ -90,55 +92,55 @@ export class AuthEffects {
     ofType(TRY_REFRESH_TOKEN),
     // Permet de faire la selection que si la valeur prec était null
     withLatestFrom(this.store.pipe(select(authTokenSelector))),
-    switchMap( ([action, token]) => {
-      
-      if(token && token!= null) {
+    switchMap(([action, token]) => {
+
+      if (token && token != null) {
         return this.authService.refreshToken().pipe(
-          map( (token: string) => {
+          map((token: string) => {
             // On garde la sub pour pouvoir la couper si le token est pas bon ou si y a déconnection
             localStorage.setItem('token', token);
             return new SigninSuccess(token);
           }),
-          catchError( (err: any) => {
+          catchError((err: any) => {
             if (this.subscription) {
               this.subscription.unsubscribe()
             }
-           return empty();
+            return empty();
           })
         );
       } else {
         return empty()
       }
     }),
-    
+
   );
 
 
-  @Effect({ dispatch: false})
+  @Effect({ dispatch: false })
   logout$ = this.actions$.pipe(
     // Permet de reconnaitre le nom de l'action
     ofType(LOGOUT),
     // Permet de faire un effet de bord lors de l'emission de l'obeservable
-    tap( () => {
+    tap(() => {
       if (this.subscription) {
         this.subscription.unsubscribe();
       }
       localStorage.removeItem('token');
       this.router.navigateByUrl('/signin');
-     
+
     })
   );
 
   @Effect()
   tryFetchCurrentUser$ = this.actions$.pipe(
     ofType(TRY_FETCH_CURRENT_USER),
-    switchMap( () => {
+    switchMap(() => {
       return this.userService.getCurrentUser();
     }),
-    map ( (user : User ) => {
+    map((user: User) => {
       return new SetCurrentUser(user);
     }),
-    catchError ( (err: any) => {
+    catchError((err: any) => {
       console.log('error fetch current user');
       return empty();
     })

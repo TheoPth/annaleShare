@@ -13,6 +13,9 @@ const RSA_PUBLIC_KEY = fs.readFileSync('./rsa/key.pub');
 router.post('/signin', (req, res) => {
   req.getConnection(function (err, connexion) {
     let query = 'select * from user where email = ?';
+    if (query) {
+
+    }
     connexion.query(query, [req.body.email], function (err, rows, fields) {
       if (err) {
         console.log(err);
@@ -27,7 +30,7 @@ router.post('/signin', (req, res) => {
         });
         res.status(200).json(token);
       } else {
-        res.status(401).json('signin fail !');
+        res.status(401).json('Signin fail !');
       }
     });
 

@@ -17,10 +17,6 @@ var map = {
 		"./src/app/monitoring/monitoring.module.ts",
 		"app-monitoring-monitoring-module"
 	],
-	"app/profile/profile.module": [
-		"./src/app/profile/profile.module.ts",
-		"app-profile-profile-module"
-	],
 	"app/search/search.module": [
 		"./src/app/search/search.module.ts",
 		"common",
@@ -214,11 +210,10 @@ __webpack_require__.r(__webpack_exports__);
 var APP_ROUTING = [
     { path: 'signup', component: _components_signup_signup_component__WEBPACK_IMPORTED_MODULE_0__["SignupComponent"] },
     { path: 'signin', component: _components_signin_signin_component__WEBPACK_IMPORTED_MODULE_1__["SigninComponent"] },
-    { path: 'profile', canActivate: [_shared_guards_auth_guard__WEBPACK_IMPORTED_MODULE_2__["AuthGuard"]], loadChildren: 'app/profile/profile.module#ProfileModule' },
     { path: 'search', loadChildren: 'app/search/search.module#SearchModule' },
-    { path: 'matiere', loadChildren: 'app/matiere/matiere.module#MatiereModule' },
-    { path: 'monitoring', loadChildren: 'app/monitoring/monitoring.module#MonitoringModule' },
-    { path: "**", redirectTo: 'signin' }
+    { path: 'matiere', canActivate: [_shared_guards_auth_guard__WEBPACK_IMPORTED_MODULE_2__["AuthGuard"]], loadChildren: 'app/matiere/matiere.module#MatiereModule' },
+    { path: 'monitoring', canActivate: [_shared_guards_auth_guard__WEBPACK_IMPORTED_MODULE_2__["AuthGuard"]], loadChildren: 'app/monitoring/monitoring.module#MonitoringModule' },
+    { path: "**", redirectTo: 'signup' }
 ];
 
 
@@ -242,7 +237,7 @@ module.exports = ".signin-wrapper{\n    margin-top: 20px;\n}"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"signin-wrapper\" fxLayout=\"row\" fxLayoutAlign=\"center center\">\n  <mat-card>\n    <mat-card-title>Connexion</mat-card-title>\n    <mat-card-content>\n      <form [formGroup]=\"form\" fxLayout=\"column\" fxLayoutGap=\"15px\">\n        <mat-form-field>\n          <input formControlName=\"email\" matInput type=\"text\" placeholder=\"email\" />\n        </mat-form-field>\n        <mat-form-field>\n          <input formControlName=\"password\" matInput type=\"password\" placeholder=\"mot de passe\" />\n        </mat-form-field>\n        <div style=\"color:red;\" *ngIf=\"error$ | async; let error\">{{ error }}</div>\n        <button class=\"btn-green\" (click)=\"submit()\" mat-raised-button >Connexion</button>\n      </form>\n    </mat-card-content>\n  </mat-card>\n</div>\n  \n<!-- <div class=\"container\">\n    <div class=\"row\">\n        <object [data]='sanitizer.bypassSecurityTrustResourceUrl(path)' type=\"application/pdf\" width=\"100%\" height=\"400px\" class=\"mt-3\">\n          <p>Alternative text - include a link <a href=\"myfile.pdf\">to the PDF!</a></p>\n        </object>\n    </div>\n  </div>\n\n<input type=\"file\" (change)=fileEvent($event)> \n\n\n<input type=\"text\" [(ngModel)]=\"nomFile\">\n<button (click)=\"telecharge()\"> Change Pdf </button> -->"
+module.exports = "<div class=\"signin-wrapper\" fxLayout=\"row\" fxLayoutAlign=\"center center\">\n  <mat-card>\n    <mat-card-title>Connexion</mat-card-title>\n    <mat-card-content>\n      <form [formGroup]=\"form\" fxLayout=\"column\" fxLayoutGap=\"15px\">\n        <mat-form-field>\n          <input formControlName=\"email\" matInput type=\"text\" placeholder=\"email\" />\n        </mat-form-field>\n        <mat-form-field>\n          <input formControlName=\"password\" matInput type=\"password\" placeholder=\"mot de passe\" />\n        </mat-form-field>\n        <div style=\"color:red;\" *ngIf=\"error$ | async; let error\">{{ error }}</div>\n        <button class=\"btn-green\" (click)=\"submit()\" mat-raised-button >Connexion</button>\n      </form>\n    </mat-card-content>\n  </mat-card>\n</div>"
 
 /***/ }),
 
@@ -1931,32 +1926,7 @@ var AuthService = /** @class */ (function () {
     }
     AuthService.prototype.initTimer = function () {
         var _this = this;
-        return Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["timer"])(1000, 1500000).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])(function () { return _this.store.dispatch(new _store_action_auth_actions__WEBPACK_IMPORTED_MODULE_6__["TryRefreshToken"]()); }));
-        //   switchMap(() => {
-        //     if (localStorage.getItem('jwt')) {
-        //       return this.http.get<string>('/api/auth/refresh-token').pipe(
-        //         tap((token: string) => {
-        //           this.jwtToken.next({
-        //             isAuthenticated: true,
-        //             token: token
-        //           });
-        //           localStorage.setItem('jwt', token);
-        //         })
-        //       );
-        //     } else {
-        //       console.log('no token to refresh');
-        //       this.subscription.unsubscribe();
-        //       return of(null);
-        //     }
-        //   })
-        // ).subscribe(() => {}, err => {
-        //   this.jwtToken.next({
-        //     isAuthenticated: false,
-        //     token: null
-        //   });
-        //   localStorage.removeItem('jwt');
-        //   this.subscription.unsubscribe();
-        // });
+        return Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["timer"])(1000, 600000).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])(function () { return _this.store.dispatch(new _store_action_auth_actions__WEBPACK_IMPORTED_MODULE_6__["TryRefreshToken"]()); }));
     };
     AuthService.prototype.initToken = function () {
         var token = localStorage.getItem('jwt');
@@ -2228,7 +2198,6 @@ var AuthEffects = /** @class */ (function () {
             return _this.authService
                 .signup(user)
                 .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(function (user) {
-                _this.router.navigate['/signin'];
                 return new _action_auth_actions__WEBPACK_IMPORTED_MODULE_3__["SignupSuccess"](user);
             }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (error) { return Object(rxjs__WEBPACK_IMPORTED_MODULE_6__["of"])(new _action_auth_actions__WEBPACK_IMPORTED_MODULE_3__["SignupError"](error)); }));
         }));
@@ -2238,20 +2207,20 @@ var AuthEffects = /** @class */ (function () {
         Object(_ngrx_effects__WEBPACK_IMPORTED_MODULE_2__["ofType"])(_action_auth_actions__WEBPACK_IMPORTED_MODULE_3__["TRY_SIGNIN"]), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(function (action) { return action.payload; }), 
         // Permet de limiter à une inscription en meme temps
         Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["switchMap"])(function (credentials) {
-            return _this.authService.signin(credentials);
-        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(function (token) {
-            localStorage.setItem('token', token);
-            return new _action_auth_actions__WEBPACK_IMPORTED_MODULE_3__["SigninSuccess"](token);
-        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (err) {
-            return Object(rxjs__WEBPACK_IMPORTED_MODULE_6__["of"])(new _action_auth_actions__WEBPACK_IMPORTED_MODULE_3__["SigninError"](err));
+            return _this.authService.signin(credentials).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(function (token) {
+                localStorage.setItem('token', token);
+                return new _action_auth_actions__WEBPACK_IMPORTED_MODULE_3__["SigninSuccess"](token);
+            }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(function (err) {
+                return Object(rxjs__WEBPACK_IMPORTED_MODULE_6__["of"])(new _action_auth_actions__WEBPACK_IMPORTED_MODULE_3__["SigninError"](err.error));
+            }));
         }));
         // pour que ngRx ne s'attende pas à rencoyer une nouvelle action
-        this.signinSuccess$ = this.actions$.pipe(Object(_ngrx_effects__WEBPACK_IMPORTED_MODULE_2__["ofType"])(_action_auth_actions__WEBPACK_IMPORTED_MODULE_3__["TRY_SIGNIN"]), 
+        this.signinSuccess$ = this.actions$.pipe(Object(_ngrx_effects__WEBPACK_IMPORTED_MODULE_2__["ofType"])(_action_auth_actions__WEBPACK_IMPORTED_MODULE_3__["SIGNIN_SUCCESS"]), 
         // Permet de faire un effet de bord lors de l'emission de l'observable
         Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["tap"])(function () {
             if (typeof _this.subscription === 'undefined' || _this.subscription.closed) {
                 _this.subscription = _this.authService.initTimer().subscribe();
-                _this.router.navigateByUrl('/');
+                //this.router.navigateByUrl('/search');
             }
         }));
         this.TryRefreshToken = this.actions$.pipe(Object(_ngrx_effects__WEBPACK_IMPORTED_MODULE_2__["ofType"])(_action_auth_actions__WEBPACK_IMPORTED_MODULE_3__["TRY_REFRESH_TOKEN"]), 

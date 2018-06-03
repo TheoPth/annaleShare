@@ -61,7 +61,7 @@
 /******/
 /******/ 	// script path function
 /******/ 	function jsonpScriptSrc(chunkId) {
-/******/ 		return __webpack_require__.p + "" + ({"app-monitoring-monitoring-module":"app-monitoring-monitoring-module","app-profile-profile-module":"app-profile-profile-module","common":"common","app-matiere-matiere-module":"app-matiere-matiere-module","app-search-search-module":"app-search-search-module"}[chunkId]||chunkId) + ".js"
+/******/ 		return __webpack_require__.p + "" + ({"app-monitoring-monitoring-module":"app-monitoring-monitoring-module","common":"common","app-matiere-matiere-module":"app-matiere-matiere-module","app-search-search-module":"app-search-search-module"}[chunkId]||chunkId) + ".js"
 /******/ 	}
 /******/
 /******/ 	// The require function

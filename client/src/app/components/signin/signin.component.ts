@@ -37,7 +37,6 @@ export class SigninComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
     this.form = this.fb.group({
       email: [''],
       password: ['']
@@ -48,18 +47,15 @@ export class SigninComponent implements OnInit {
 
     let auth$ = this.store.pipe(select(isLoggedIn));
     
+    
     auth$.subscribe(val => {
       if (val) {
         this.router.navigateByUrl('/search');
       }
     });
-
-
   }
 
   public submit(): void {
     this.store.dispatch(new TrySignin(this.form.value));
-
-
   }
 }

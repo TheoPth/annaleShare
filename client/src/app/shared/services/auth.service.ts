@@ -29,33 +29,8 @@ export class AuthService {
   }
 
   public initTimer() {
-    return timer(1000, 1500000).pipe(
+    return timer(1000, 600000).pipe(
       tap (() => this.store.dispatch(new TryRefreshToken())));
-    //   switchMap(() => {
-    //     if (localStorage.getItem('jwt')) {
-    //       return this.http.get<string>('/api/auth/refresh-token').pipe(
-    //         tap((token: string) => {
-    //           this.jwtToken.next({
-    //             isAuthenticated: true,
-    //             token: token
-    //           });
-    //           localStorage.setItem('jwt', token);
-    //         })
-    //       );
-    //     } else {
-    //       console.log('no token to refresh');
-    //       this.subscription.unsubscribe();
-    //       return of(null);
-    //     }
-    //   })
-    // ).subscribe(() => {}, err => {
-    //   this.jwtToken.next({
-    //     isAuthenticated: false,
-    //     token: null
-    //   });
-    //   localStorage.removeItem('jwt');
-    //   this.subscription.unsubscribe();
-    // });
   }
 
 
@@ -78,9 +53,8 @@ export class AuthService {
     return this.http.post<User>('/api/auth/signup', user);
   }
 
-  public signin(credentials: { email: string, password: string}): Observable<string> {
-   
-    return this.http.post<string>('/api/auth/signin', credentials);
+  public signin(credentials: { email: string, password: string}): Observable<any> {
+    return this.http.post<any>('/api/auth/signin', credentials);
   }
 
   public logout(): void {
