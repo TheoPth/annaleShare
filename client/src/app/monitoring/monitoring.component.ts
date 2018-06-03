@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { State } from '../shared/store';
-import { FetchSpecialite, SetSpecialiteSelected, FetchDroit, FetchMatiere, DeleteMatiere, FetchUser, SetUserSelected, FetchDroitUserSelected, UnsetDroitUserSelected, SetDroitUserSelected } from './shared/store/monitoring.actions';
-import { specialitesSelector, droitsSelector, matieresSelector, usersSelector, droitUserSelectedSelector, userSelectedSelector } from './shared/store/monitoring.selectors';
+import { FetchSpecialite, SetSpecialiteSelected, FetchDroit, FetchMatiere, DeleteMatiere, FetchUser, SetUserSelected, FetchDroitUserSelected, UnsetDroitUserSelected, SetDroitUserSelected, FetchShareLink, JoinSpecialite } from './shared/store/monitoring.actions';
+import { specialitesSelector, droitsSelector, matieresSelector, usersSelector, droitUserSelectedSelector, userSelectedSelector, getShareLinkSelector, specialitesSelectedSelector } from './shared/store/monitoring.selectors';
 import { select } from '@ngrx/store';
 import { Donnee } from './shared/models/donnee.model';
 import { Observable, of } from 'rxjs';
@@ -26,20 +26,40 @@ export class MonitoringComponent implements OnInit {
   public userSelected$ : Observable<UserMonitor>;
   public userSelected : UserMonitor;
 
+  public selectDroitLink: {idDroit:number, libelle : string}[];
+  public droitLinkSelected : {idDroit:number, libelle : string};
+  public tempsValidite: number;
+  public lienPartage : string;
+
+  public speSelected: Donnee;
+  public lienRejoindre : string;
 
   constructor(
     private store : Store<State>
   ) { }
 
   ngOnInit() {
+  
+    this.droitLinkSelected = {idDroit : 1, libelle : 'Lire'};
+    this.selectDroitLink = [
+      {idDroit : 1, libelle : "Lire"},
+      {idDroit : 2, libelle : "Ajouter"},
+      {idDroit : 3, libelle : "Supprimer"},
+      {idDroit : 4, libelle : "Administrer"}
+    ];
 
     // Récupération des spécialités
     this.store.dispatch(new FetchSpecialite());
     this.specialites$ = this.store.pipe(select(specialitesSelector));
     this.specialites$.subscribe( (val : Donnee[]) => {
       this.specialites = val;
-    })
+    });
 
+     // Permet de caccher les panneau t'en qu'on a pas sélectionné une spe
+    this.store.pipe(select(specialitesSelectedSelector)).subscribe( (spe : Donnee) => {
+      this.speSelected = spe;
+    })
+   
     // Initialisation pour éviter les undifineds
     this.users$ = this.store.pipe(select(usersSelector));
 
@@ -71,27 +91,25 @@ export class MonitoringComponent implements OnInit {
 
     // Recupétation des utilisateurs qui utlisent aussi la spé
     this.store.dispatch(new FetchUser());
-
-    
-
   }
 
   // Renvoie true si le droit associé est acqui, false sinon
-  peutFaire (num : number) {
-    let res = false;
+  public possedeDroit(nomDroit : string) : boolean {
+    let possedeDroit = false;
     if (this.droits) {
-      this.droits.forEach(element => {
-        if (element.idDroit === num) {
-          res = element.estAcquis;
+      this.droits.forEach((droit : Droit) => {
+        if ( droit.intitule === nomDroit ) {
+          possedeDroit = droit.estAcquis;
         }
-      });
+    });
     }
-    return res;
+   
+    return possedeDroit;
   }
   
 
   // Supprimer une matiere
-  supprimerMatiere(matiere: Donnee) : void {
+  deleteMatiere(matiere: Donnee) : void {
     this.store.dispatch(new DeleteMatiere(matiere));
   }
 
@@ -111,4 +129,35 @@ export class MonitoringComponent implements OnInit {
     }
   }
 
+  // Permet de setter le bon droit pour le lien de partage
+  chooseLevelLink (link) {
+    this.droitLinkSelected = link;
+  }
+
+  //Comparaison ne fonctionne pas dans le nfIf
+  plusPetitEgal (a, b) {
+    return a <= b;
+  }
+
+  // Lance la requete pour obtenir le lien de paratge correspondant a la demande
+  getSharedLink() {
+    if (this.tempsValidite) {
+     
+      this.store.dispatch(new FetchShareLink({
+        idDroit: this.droitLinkSelected.idDroit,
+        temps: this.tempsValidite
+      }));
+
+      this.store.pipe(select(getShareLinkSelector)).subscribe((lien : string) => {
+        this.lienPartage = lien;
+      });
+      
+    }
+  }
+
+  public rejoindreGroupe () {
+    if (this.lienRejoindre) {
+      this.store.dispatch(new JoinSpecialite(this.lienRejoindre) );
+    }
+  }
 }

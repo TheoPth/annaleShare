@@ -33,6 +33,7 @@ export class SignupComponent implements OnInit {
     this.form = this.fb.group({
       email: [''],
       name: [''],
+      firstname: [''],
       password: ['']
     });
   

@@ -14,10 +14,21 @@ router.post('/getSpecialites', (req, res) => {
 });
 
 // Renvoie toute les matières d'une spécialité 
-router.post('/getMatieres', (req, res) => {
-    searchDAO.getMatiere(req, req.body.idSpe, result => {
-        res.status(200).json(result);
+router.get('/getMatieres/:idSpe', userDAO.isLoggedIn, userDAO.getDroit,  (req, res) => {
+    // Avoir le droit de lecture
+    let idSpe = req.params.idSpe;
+    userDAO.checkDroit(req, res, idSpe, droit.Lecture, isAutho => {
+        console.log (isAutho);
+        if (isAutho) {
+            searchDAO.getMatiere(req, idSpe, result => {
+                res.status(200).json(result);
+            });
+        } else {
+            return res.status(200).json ({err : "Vous n'êtes pas authorisé à accéder à ces matières."});
+        }
     });
+
+    
 });
 
 // Renvoie toute les écoles
@@ -27,15 +38,7 @@ router.get('/getEcoles', (req, res) => {
     });
 });
 
-
-router.post('/getParent', (req, res) => {
-    searchDAO.getParent(req, res, req.body.payload.id, result => {
-        res.status(200).json(result);
-    })
-})
-
-router.post('/addEcole', (req, res) => {
-    
+router.post('/addEcole', (req, res) => {  
     searchDAO.addEcole(req, res, req.body.nomEcole, result => {
         res.status(200).json(result);
     })
@@ -46,7 +49,7 @@ router.post('/addSpecialite', userDAO.isLoggedIn,  (req, res) => {
     searchDAO.addSpecialite(req, res, req.body.idEcole, req.body.nomSpe,  result => {
         // Donne les droits à la l'utilisateur pour la spé qu'il a créé
        
-        droitDAO.addDroitSpecialite(req, res, req.user.id, result.maxIdSpecialite, droit.administrer, result => {
+        droitDAO.addDroitSpecialite(req, res, req.user.id, result.maxIdSpecialite, droit.Administrer, result => {
             res.status(200).json(result);
         });
        

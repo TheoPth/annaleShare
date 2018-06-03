@@ -73,4 +73,12 @@ export class MonitoringService {
   public unsetDroitUser(idSpe : number, idUser : number, idDroit : number): Observable<any> {
     return this.http.post<any>("/api/monitoring/unsetDroitUser", {idSpe : idSpe, idUser : idUser, idDroit : idDroit});
   }
+
+  public getLienPartage(idDroit : number, temps : number, idSpecialite : number): Observable<string> {
+    return this.http.get<string>("/api/monitoring/getLienPartage/" + idDroit+ "/" + temps + "/"+ idSpecialite );
+  }
+
+  public joinTeam(lien : string ): Observable<string> {
+    return this.http.post<string>("/api/monitoring/joinTeam", {lien : lien});
+  }
 }

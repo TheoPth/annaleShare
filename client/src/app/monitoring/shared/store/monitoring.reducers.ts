@@ -2,7 +2,7 @@
 import { Donnee } from "../models/donnee.model";
 import { User } from "../models/user.model";
 import { Droit } from "../models/droit.model";
-import { FETCH_SPECIALITE_SUCCESS, SET_SPECIALITE_SELECTED, FETCH_DROIT_SUCCESS, FETCH_MATIERE_SUCCESS, FETCH_USER_SUCCESS, SET_USER_SELECTED, FETCH_DROIT_USER_SELECTED_SUCCESS, MonitoringAction } from "./monitoring.actions";
+import { FETCH_SPECIALITE_SUCCESS, SET_SPECIALITE_SELECTED, FETCH_DROIT_SUCCESS, FETCH_MATIERE_SUCCESS, FETCH_USER_SUCCESS, SET_USER_SELECTED, FETCH_DROIT_USER_SELECTED_SUCCESS, MonitoringAction, FETCH_SHARE_LINK_SUCCESS } from "./monitoring.actions";
 import { UserMonitor } from "../models/userMonitor.model";
 
 
@@ -13,7 +13,8 @@ export interface MonitoringState {
     matieres : Donnee[];
     users : UserMonitor[];
     userSelected : UserMonitor;
-    droitUserSelected : Droit[]; 
+    droitUserSelected : Droit[];
+    shareLink : string;
 }
 
 export function MonitoringReducer(state: MonitoringState, action: MonitoringAction): MonitoringState {
@@ -67,8 +68,13 @@ export function MonitoringReducer(state: MonitoringState, action: MonitoringActi
             }
 
         }
+        case FETCH_SHARE_LINK_SUCCESS : {
+            return {
+                ...state,
+                shareLink : action.payload
+            }
 
-        
+        }
     }
 
     return state;

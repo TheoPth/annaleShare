@@ -18,7 +18,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"container container-white p-3\">\n    <div class=\"row\">\n        <div class=\"col-md-6 col-xs-12\">\n            <div class=\"row\">\n                \n                <div class=\"col-lg-12\">\n                    <h3>Mes spécialités :</h3>\n                    \n                    <button (click)=\"afficheSpe(spe)\"\n                        *ngFor=\"let spe of (specialites$ | async)\" \n                        type=\"button\" \n                        class=\"btn btn-outline-info btn-rounded waves-effect col-lg-3 col-sm-6 mr-0 ml-0\">{{ spe.nom }}\n                    </button>\n                    <hr>\n                </div>\n                \n                <div class=\"col-lg-12\">\n                    <h3>Mes droits :</h3>\n                    <ul class=\"list-group\">\n                        <li *ngFor=\"let droit of droits$ | async \" class=\"list-group-item \">\n                            {{ droit.intitule }}\n                            <i [appPossedeDroit]=\"droit.estAcquis\" class=\"material-icons float-right\">\n                                close\n                            </i>\n                        </li>\n                    </ul>\n\n                </div>\n            </div>\n        </div>\n        <div class=\"col-md-6 col-xs-12\">\n            \n            <ul class=\"list-group\">\n                <h3>Les matières :</h3>\n                <li *ngFor=\"let matiere of matieres$ | async\" class=\"list-group-item \">\n                    {{ matiere.nom }}\n                    <i class=\"material-icons float-right pointer\">\n                        delete\n                    </i>\n                    <!-- <button class=\"btn btn-danger\" (click)=\"supprimerMatiere(matiere)\" *ngIf=\"peutFaire(7)\">\n                        \n                    </button> -->\n                </li>\n            </ul>\n        </div>\n\n    </div>\n</div>\n<div class=\"container container-white p-3 mb-4\">\n    <div class=\"row\">\n        <div class=\"col-6\">\n            <h3>Panel Admin</h3>\n\n                <ul class=\"list-group\">\n                    <li *ngFor=\"let user of users$ | async \" class=\"list-group-item pointer\" (click)=\"setUserActif(user)\">\n                        {{ user.nom }}\n                        <i class=\"material-icons float-right\">\n                            edit\n                        </i>\n                    </li>\n                </ul>\n               \n        </div>\n    \n\n        <div class=\"col-6\" *ngIf=\"userSelected\">\n            <h3>Droits de : {{userSelected?.nom}}</h3>\n            <ul class=\"list-group\">\n                <li *ngFor=\"let userSelectedDroit of usersSelectedDroits$ | async \" class=\"pointer list-group-item \">\n                    {{ userSelectedDroit.intitule }}\n                    <i [appCheckboxDroit]=\"userSelectedDroit.estAcquis\" class=\" material-icons float-right\" (click)=\"toggleDroit(userSelectedDroit)\">\n                        close\n                    </i>\n               </li>\n            </ul>\n        </div>\n    </div>\n</div>"
+module.exports = "\n<div class=\"container container-white p-3\">\n    <div class=\"row\">\n        <div class=\"col-md-6 col-xs-12\">\n            <div class=\"row\">\n                \n                <div class=\"col-lg-12\">\n                    <h3>Mes spécialités :</h3>\n                    \n                    <button (click)=\"afficheSpe(spe)\"\n                        *ngFor=\"let spe of (specialites$ | async)\" \n                        type=\"button\" \n                        class=\"btn btn-outline-info btn-rounded waves-effect col-lg-3 col-sm-6 mr-0 ml-0\">{{ spe.nom }}\n                    </button>\n                    <hr>\n                </div>\n                \n                <div class=\"col-lg-12\" *ngIf=\"speSelected\">\n                    <h3>Mes droits :</h3>\n                    <ul class=\"list-group\">\n                        <li *ngFor=\"let droit of droits$ | async \" class=\"list-group-item \">\n                            {{ droit.intitule }}\n                            <i [appPossedeDroit]=\"droit.estAcquis\" class=\"material-icons float-right\">\n                                close\n                            </i>\n                        </li>\n                    </ul>\n\n                </div>\n            </div>\n        </div>\n        <div class=\"col-md-6 col-xs-12\" *ngIf=\"speSelected\">\n            \n            <ul class=\"list-group\">\n                <h3>Les matières :</h3>\n                <li *ngFor=\"let matiere of matieres$ | async\" class=\"list-group-item \">\n                    {{ matiere.nom }}\n                    <i class=\"material-icons float-right pointer\" (click)=\"deleteMatiere(matiere)\" *ngIf=\"possedeDroit('Supprimer')\">\n                        delete\n                    </i>\n                </li>\n            </ul>\n        </div>\n    </div>\n</div>\n\n\n<div class=\"container container-white p-3\">\n<div class=\"row\">\n    <div class=\"col-12\">\n        <h3>Rejoindre un groupe ?</h3>\n        <div class=\"form-check form-check-inline\">\n            <label class =\"form-check-label\">Lien:</label>\n            <input type=\"text\" class=\"form-control form-check-input\" [(ngModel)]=\"lienRejoindre\">\n            <i class=\"material-icons pointer \" (click)=\"rejoindreGroupe()\">\n                send\n            </i>\n        </div>\n\n    </div>\n</div>\n</div>\n\n\n<div class=\"container container-white p-3 mb-4\" *ngIf=\"possedeDroit('Administrer')\" >\n    <div class=\"row\">\n        <h3 class=\"ml-5 mb-2\">Panel Admin</h3>\n        \n    </div>\n\n    <div class=\"row\">\n        <div class=\"col-6\">\n                <h4 class=\"ml-5\">Tout les {{speSelected.nom}}</h4>\n\n                <ul class=\"list-group\" style=\"max-height: 40vh; overflow-y : scroll\">\n                    <li *ngFor=\"let user of users$ | async \" class=\"list-group-item pointer\" (click)=\"setUserActif(user)\">\n                        {{ user.nom }}\n                        <i class=\"material-icons float-right\">\n                            edit\n                        </i>\n                    </li>\n                </ul>\n               \n        </div>\n    \n\n        <div class=\"col-6\" *ngIf=\"userSelected\">\n            <h4>Droits de : {{userSelected?.nom}}</h4>\n            <ul class=\"list-group\">\n                <li *ngFor=\"let userSelectedDroit of usersSelectedDroits$ | async \" class=\"pointer list-group-item \">\n                    {{ userSelectedDroit.intitule }}\n                    <i [appCheckboxDroit]=\"userSelectedDroit.estAcquis\" class=\" material-icons float-right\" (click)=\"toggleDroit(userSelectedDroit)\">\n                        close\n                    </i>\n               </li>\n            </ul>\n        </div>\n    </div>\n\n    <div class=\"row\" *ngIf=\"!pristineSpe\">\n        <div class=\"col-lg-6 col-md-12\">\n            <hr>\n            <h2> Lien de partage : </h2>\n\n            <div class=\"row\">\n                <div class=\"col-lg-6 col-md-12\">\n                    <ul class=\"list-group\">\n                        <li *ngFor=\"let droitLink of selectDroitLink \" class=\"pointer list-group-item \" (click)=\"chooseLevelLink(droitLink)\">\n                            {{ droitLink.libelle }}\n                            <i [appCheckboxDroit]=\"plusPetitEgal(droitLink.idDroit, droitLinkSelected.idDroit)\" class=\" material-icons float-right\" >\n                                close\n                            </i>\n                        </li>\n                    </ul>\n                </div>\n\n                <div class=\"col-lg-6 col-md-12\">\n                    <div class=\"col-12\">\n                        <label>Temps de validité :</label>\n                        <div class=\"form-check form-check-inline\">\n                            <input type=\"number\" class=\"form-control col-9\" [(ngModel)]=\"tempsValidite\"><label class=\"form-check-label\"> min.</label>\n                        </div>\n                    </div>\n\n\n                    <div class=\"col-12\">\n                        <label>Lien : </label>\n                        <div class=\"form-check form-check-inline\">\n                            <input type=\"text\" class=\"col-10 form-control\" [(ngModel)]=\"lienPartage\">\n                            <i class=\"material-icons pointer \" (click)=\"getSharedLink(matiere)\">\n                                save_alt\n                            </i>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n</div>"
 
 /***/ }),
 
@@ -56,11 +56,22 @@ var MonitoringComponent = /** @class */ (function () {
     }
     MonitoringComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.droitLinkSelected = { idDroit: 1, libelle: 'Lire' };
+        this.selectDroitLink = [
+            { idDroit: 1, libelle: "Lire" },
+            { idDroit: 2, libelle: "Ajouter" },
+            { idDroit: 3, libelle: "Supprimer" },
+            { idDroit: 4, libelle: "Administrer" }
+        ];
         // Récupération des spécialités
         this.store.dispatch(new _shared_store_monitoring_actions__WEBPACK_IMPORTED_MODULE_2__["FetchSpecialite"]());
         this.specialites$ = this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["select"])(_shared_store_monitoring_selectors__WEBPACK_IMPORTED_MODULE_3__["specialitesSelector"]));
         this.specialites$.subscribe(function (val) {
             _this.specialites = val;
+        });
+        // Permet de caccher les panneau t'en qu'on a pas sélectionné une spe
+        this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["select"])(_shared_store_monitoring_selectors__WEBPACK_IMPORTED_MODULE_3__["specialitesSelectedSelector"])).subscribe(function (spe) {
+            _this.speSelected = spe;
         });
         // Initialisation pour éviter les undifineds
         this.users$ = this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["select"])(_shared_store_monitoring_selectors__WEBPACK_IMPORTED_MODULE_3__["usersSelector"]));
@@ -88,19 +99,19 @@ var MonitoringComponent = /** @class */ (function () {
         this.store.dispatch(new _shared_store_monitoring_actions__WEBPACK_IMPORTED_MODULE_2__["FetchUser"]());
     };
     // Renvoie true si le droit associé est acqui, false sinon
-    MonitoringComponent.prototype.peutFaire = function (num) {
-        var res = false;
+    MonitoringComponent.prototype.possedeDroit = function (nomDroit) {
+        var possedeDroit = false;
         if (this.droits) {
-            this.droits.forEach(function (element) {
-                if (element.idDroit === num) {
-                    res = element.estAcquis;
+            this.droits.forEach(function (droit) {
+                if (droit.intitule === nomDroit) {
+                    possedeDroit = droit.estAcquis;
                 }
             });
         }
-        return res;
+        return possedeDroit;
     };
     // Supprimer une matiere
-    MonitoringComponent.prototype.supprimerMatiere = function (matiere) {
+    MonitoringComponent.prototype.deleteMatiere = function (matiere) {
         this.store.dispatch(new _shared_store_monitoring_actions__WEBPACK_IMPORTED_MODULE_2__["DeleteMatiere"](matiere));
     };
     MonitoringComponent.prototype.setUserActif = function (user) {
@@ -115,6 +126,32 @@ var MonitoringComponent = /** @class */ (function () {
         }
         else {
             this.store.dispatch(new _shared_store_monitoring_actions__WEBPACK_IMPORTED_MODULE_2__["SetDroitUserSelected"](droit));
+        }
+    };
+    // Permet de setter le bon droit pour le lien de partage
+    MonitoringComponent.prototype.chooseLevelLink = function (link) {
+        this.droitLinkSelected = link;
+    };
+    //Comparaison ne fonctionne pas dans le nfIf
+    MonitoringComponent.prototype.plusPetitEgal = function (a, b) {
+        return a <= b;
+    };
+    // Lance la requete pour obtenir le lien de paratge correspondant a la demande
+    MonitoringComponent.prototype.getSharedLink = function () {
+        var _this = this;
+        if (this.tempsValidite) {
+            this.store.dispatch(new _shared_store_monitoring_actions__WEBPACK_IMPORTED_MODULE_2__["FetchShareLink"]({
+                idDroit: this.droitLinkSelected.idDroit,
+                temps: this.tempsValidite
+            }));
+            this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["select"])(_shared_store_monitoring_selectors__WEBPACK_IMPORTED_MODULE_3__["getShareLinkSelector"])).subscribe(function (lien) {
+                _this.lienPartage = lien;
+            });
+        }
+    };
+    MonitoringComponent.prototype.rejoindreGroupe = function () {
+        if (this.lienRejoindre) {
+            this.store.dispatch(new _shared_store_monitoring_actions__WEBPACK_IMPORTED_MODULE_2__["JoinSpecialite"](this.lienRejoindre));
         }
     };
     MonitoringComponent = __decorate([
@@ -187,7 +224,8 @@ var MonitoringModule = /** @class */ (function () {
                 _ngrx_effects__WEBPACK_IMPORTED_MODULE_6__["EffectsModule"].forFeature([_shared_store_monitoring_effects__WEBPACK_IMPORTED_MODULE_9__["MonitoringEffects"]]),
                 _angular_forms__WEBPACK_IMPORTED_MODULE_7__["FormsModule"]
             ],
-            declarations: [_monitoring_component__WEBPACK_IMPORTED_MODULE_2__["MonitoringComponent"], _shared_directives_possede_droit_directive__WEBPACK_IMPORTED_MODULE_11__["PossedeDroitDirective"], _shared_directives_checkbox_droit_directive__WEBPACK_IMPORTED_MODULE_12__["CheckboxDroitDirective"]]
+            declarations: [_monitoring_component__WEBPACK_IMPORTED_MODULE_2__["MonitoringComponent"], _shared_directives_possede_droit_directive__WEBPACK_IMPORTED_MODULE_11__["PossedeDroitDirective"], _shared_directives_checkbox_droit_directive__WEBPACK_IMPORTED_MODULE_12__["CheckboxDroitDirective"]],
+            providers: []
         })
     ], MonitoringModule);
     return MonitoringModule;
@@ -402,6 +440,12 @@ var MonitoringService = /** @class */ (function () {
     MonitoringService.prototype.unsetDroitUser = function (idSpe, idUser, idDroit) {
         return this.http.post("/api/monitoring/unsetDroitUser", { idSpe: idSpe, idUser: idUser, idDroit: idDroit });
     };
+    MonitoringService.prototype.getLienPartage = function (idDroit, temps, idSpecialite) {
+        return this.http.get("/api/monitoring/getLienPartage/" + idDroit + "/" + temps + "/" + idSpecialite);
+    };
+    MonitoringService.prototype.joinTeam = function (lien) {
+        return this.http.post("/api/monitoring/joinTeam", { lien: lien });
+    };
     MonitoringService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
             providedIn: 'root'
@@ -500,6 +544,17 @@ var MonitoringEffects = /** @class */ (function () {
         }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["switchMap"])(function () {
             return [new _monitoring_actions__WEBPACK_IMPORTED_MODULE_4__["FetchDroitUserSelected"](), new _monitoring_actions__WEBPACK_IMPORTED_MODULE_4__["FetchDroit"]()];
         }));
+        this.getShareLink$ = this.action$.pipe(Object(_ngrx_effects__WEBPACK_IMPORTED_MODULE_3__["ofType"])(_monitoring_actions__WEBPACK_IMPORTED_MODULE_4__["FETCH_SHARE_LINK"]), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["withLatestFrom"])(this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["select"])(_monitoring_selectors__WEBPACK_IMPORTED_MODULE_6__["specialitesSelectedSelector"]))), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["switchMap"])(function (_a) {
+            var action = _a[0], spe = _a[1];
+            return _this.monitoringService.getLienPartage(action.payload.idDroit, action.payload.temps, spe.id);
+        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["map"])(function (lien) {
+            return new _monitoring_actions__WEBPACK_IMPORTED_MODULE_4__["FetchShareLinkSuccess"](lien);
+        }));
+        this.joinSpe$ = this.action$.pipe(Object(_ngrx_effects__WEBPACK_IMPORTED_MODULE_3__["ofType"])(_monitoring_actions__WEBPACK_IMPORTED_MODULE_4__["JOIN_SPECIALITE"]), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["switchMap"])(function (action) {
+            return _this.monitoringService.joinTeam(action.payload);
+        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["map"])(function (lien) {
+            return new _monitoring_actions__WEBPACK_IMPORTED_MODULE_4__["FetchShareLinkSuccess"](lien);
+        }));
     }
     __decorate([
         Object(_ngrx_effects__WEBPACK_IMPORTED_MODULE_3__["Effect"])(),
@@ -533,6 +588,14 @@ var MonitoringEffects = /** @class */ (function () {
         Object(_ngrx_effects__WEBPACK_IMPORTED_MODULE_3__["Effect"])(),
         __metadata("design:type", Object)
     ], MonitoringEffects.prototype, "unserDroitUserSelected$", void 0);
+    __decorate([
+        Object(_ngrx_effects__WEBPACK_IMPORTED_MODULE_3__["Effect"])(),
+        __metadata("design:type", Object)
+    ], MonitoringEffects.prototype, "getShareLink$", void 0);
+    __decorate([
+        Object(_ngrx_effects__WEBPACK_IMPORTED_MODULE_3__["Effect"])(),
+        __metadata("design:type", Object)
+    ], MonitoringEffects.prototype, "joinSpe$", void 0);
     MonitoringEffects = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
         __metadata("design:paramtypes", [_ngrx_effects__WEBPACK_IMPORTED_MODULE_3__["Actions"],
@@ -542,86 +605,6 @@ var MonitoringEffects = /** @class */ (function () {
     return MonitoringEffects;
 }());
 
-
-
-/***/ }),
-
-/***/ "./src/app/monitoring/shared/store/monitoring.selectors.ts":
-/*!*****************************************************************!*\
-  !*** ./src/app/monitoring/shared/store/monitoring.selectors.ts ***!
-  \*****************************************************************/
-/*! exports provided: moonitoringSelector, specialitesSelector, specialitesSelectedSelector, droitsSelector, matieresSelector, usersSelector, userSelectedSelector, droitUserSelectedSelector */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "moonitoringSelector", function() { return moonitoringSelector; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "specialitesSelector", function() { return specialitesSelector; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "specialitesSelectedSelector", function() { return specialitesSelectedSelector; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "droitsSelector", function() { return droitsSelector; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "matieresSelector", function() { return matieresSelector; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "usersSelector", function() { return usersSelector; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "userSelectedSelector", function() { return userSelectedSelector; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "droitUserSelectedSelector", function() { return droitUserSelectedSelector; });
-/* harmony import */ var _ngrx_store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @ngrx/store */ "./node_modules/@ngrx/store/fesm5/store.js");
-
-var moonitoringSelector = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_0__["createFeatureSelector"])('monitoring');
-var specialitesSelector = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_0__["createSelector"])(moonitoringSelector, function (searchState) {
-    if (searchState) {
-        return searchState.specialites;
-    }
-    else {
-        return null;
-    }
-});
-var specialitesSelectedSelector = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_0__["createSelector"])(moonitoringSelector, function (searchState) {
-    if (searchState) {
-        return searchState.specialiteSelected;
-    }
-    else {
-        return null;
-    }
-});
-var droitsSelector = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_0__["createSelector"])(moonitoringSelector, function (searchState) {
-    if (searchState) {
-        return searchState.droits;
-    }
-    else {
-        return null;
-    }
-});
-var matieresSelector = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_0__["createSelector"])(moonitoringSelector, function (searchState) {
-    if (searchState) {
-        return searchState.matieres;
-    }
-    else {
-        return null;
-    }
-});
-var usersSelector = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_0__["createSelector"])(moonitoringSelector, function (searchState) {
-    if (searchState) {
-        return searchState.users;
-    }
-    else {
-        return null;
-    }
-});
-var userSelectedSelector = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_0__["createSelector"])(moonitoringSelector, function (searchState) {
-    if (searchState) {
-        return searchState.userSelected;
-    }
-    else {
-        return null;
-    }
-});
-var droitUserSelectedSelector = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_0__["createSelector"])(moonitoringSelector, function (searchState) {
-    if (searchState) {
-        return searchState.droitUserSelected;
-    }
-    else {
-        return null;
-    }
-});
 
 
 /***/ })

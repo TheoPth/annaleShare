@@ -183,7 +183,9 @@ var AppModule = /** @class */ (function () {
                 _shared_modules_layout_module__WEBPACK_IMPORTED_MODULE_14__["LayoutModule"],
             ],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_5__["AppComponent"]],
-            providers: [{ provide: _angular_common__WEBPACK_IMPORTED_MODULE_15__["APP_BASE_HREF"], useValue: '/' }]
+            providers: [
+                { provide: _angular_common__WEBPACK_IMPORTED_MODULE_15__["APP_BASE_HREF"], useValue: '/' }
+            ]
         })
     ], AppModule);
     return AppModule;
@@ -337,7 +339,7 @@ module.exports = ".signup-wrapper{\n    margin-top: 20px;\n}"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"signup-wrapper\" fxLayout=\"row\" fxLayoutAlign=\"center center\">\n    <mat-card>\n      <mat-card-title>Inscription</mat-card-title>\n      <mat-card-content>\n        <form [formGroup]=\"form\" fxLayout=\"column\" fxLayoutGap=\"15px\">\n          <mat-form-field>\n            <input formControlName=\"email\" matInput type=\"text\" placeholder=\"email\" />\n          </mat-form-field>\n          <mat-form-field>\n              <input formControlName=\"name\" matInput type=\"text\" placeholder=\"nom\" />\n            </mat-form-field>\n          <mat-form-field>\n            <input formControlName=\"password\" matInput type=\"password\" placeholder=\"mot de passe\" />\n          </mat-form-field>\n         \n          <div *ngIf=\"error$ | async; let error\">{{ error }}</div>\n          <button class=\"btn-green\" (click)=\"submit()\" mat-raised-button >Inscription</button>\n        </form>\n      </mat-card-content>\n    </mat-card>\n  </div>"
+module.exports = "<div class=\"signup-wrapper\" fxLayout=\"row\" fxLayoutAlign=\"center center\">\n    <mat-card>\n      <mat-card-title>Inscription</mat-card-title>\n      <mat-card-content>\n        <form [formGroup]=\"form\" fxLayout=\"column\" fxLayoutGap=\"15px\">\n          <mat-form-field>\n            <input formControlName=\"email\" matInput type=\"text\" placeholder=\"email\" />\n          </mat-form-field>\n          <mat-form-field>\n              <input formControlName=\"name\" matInput type=\"text\" placeholder=\"nom\" />\n            </mat-form-field>\n            <mat-form-field>\n                <input formControlName=\"firstname\" matInput type=\"text\" placeholder=\"firstname\" />\n              </mat-form-field>\n          <mat-form-field>\n            <input formControlName=\"password\" matInput type=\"password\" placeholder=\"mot de passe\" />\n          </mat-form-field>\n         \n          <div *ngIf=\"error$ | async; let error\">{{ error }}</div>\n          <button class=\"btn-green\" (click)=\"submit()\" mat-raised-button >Inscription</button>\n        </form>\n      </mat-card-content>\n    </mat-card>\n  </div>"
 
 /***/ }),
 
@@ -385,6 +387,7 @@ var SignupComponent = /** @class */ (function () {
         this.form = this.fb.group({
             email: [''],
             name: [''],
+            firstname: [''],
             password: ['']
         });
         this.error$ = this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_4__["select"])(_shared_store_selectors_auth_selectors__WEBPACK_IMPORTED_MODULE_6__["errorAuthSelector"]));
@@ -600,11 +603,89 @@ function RessourceReducer(state, action) {
 
 /***/ }),
 
+/***/ "./src/app/monitoring/shared/interceptors/spe-interceptor.ts":
+/*!*******************************************************************!*\
+  !*** ./src/app/monitoring/shared/interceptors/spe-interceptor.ts ***!
+  \*******************************************************************/
+/*! exports provided: SpeInterceptor */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SpeInterceptor", function() { return SpeInterceptor; });
+/* harmony import */ var rxjs_add_operator_do__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! rxjs/add/operator/do */ "./node_modules/rxjs-compat/_esm5/add/operator/do.js");
+/* harmony import */ var _ngrx_store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @ngrx/store */ "./node_modules/@ngrx/store/fesm5/store.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _store_monitoring_selectors__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../store/monitoring.selectors */ "./src/app/monitoring/shared/store/monitoring.selectors.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+var SpeInterceptor = /** @class */ (function () {
+    function SpeInterceptor(store, router) {
+        var _this = this;
+        this.store = store;
+        this.router = router;
+        this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["select"])(_store_monitoring_selectors__WEBPACK_IMPORTED_MODULE_5__["specialitesSelectedSelector"])).subscribe(function (spe) {
+            _this.spe = spe;
+        });
+    }
+    /**
+     * inter
+     */
+    SpeInterceptor.prototype.inter = function (req, next) {
+        if (this.spe) {
+            var authReq = req.clone({
+                headers: req.headers.set('specialiteMonitoring', this.spe.id)
+            });
+            return next.handle(authReq);
+        }
+        else {
+            return next.handle(req);
+        }
+    };
+    SpeInterceptor.prototype.intercept = function (req, next) {
+        // Intercept le retour pour l'erreur 401 
+        return this.inter(req, next).do(function (event) {
+            // Dans tout les autre cas que les erreurs
+        }, function (err) {
+            if (err instanceof _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpErrorResponse"]) {
+                if (err.status === 403) {
+                    alert("Vous n'avez pas les droits suffisants pour réaliser cette action.");
+                }
+            }
+        });
+    };
+    SpeInterceptor = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["Injectable"])(),
+        __metadata("design:paramtypes", [_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["Store"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"]])
+    ], SpeInterceptor);
+    return SpeInterceptor;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/monitoring/shared/store/monitoring.actions.ts":
 /*!***************************************************************!*\
   !*** ./src/app/monitoring/shared/store/monitoring.actions.ts ***!
   \***************************************************************/
-/*! exports provided: FETCH_SPECIALITE, FETCH_SPECIALITE_SUCCESS, FETCH_MATIERE, FETCH_MATIERE_SUCCESS, FETCH_USER, FETCH_USER_SUCCESS, FETCH_DROIT_USER_SELECTED, FETCH_DROIT_USER_SELECTED_SUCCESS, FETCH_DROIT, FETCH_DROIT_SUCCESS, FetchSpecialite, FetchSpecialiteSuccess, FetchDroit, FetchDroitSuccess, FetchMatiere, FetchMatiereSuccess, FetchUser, FetchUserSuccess, FetchDroitUserSelected, FetchDroitUserSelectedSuccess, SET_DROIT_USER_SELECTED, DELETE_MATIERE, SET_SPECIALITE_SELECTED, SET_USER_SELECTED, UNSET_DROIT_USER_SELECTED, SetDroitUserSelected, UnsetDroitUserSelected, DeleteMatiere, SetSpecialiteSelected, SetUserSelected */
+/*! exports provided: FETCH_SPECIALITE, FETCH_SPECIALITE_SUCCESS, FETCH_MATIERE, FETCH_MATIERE_SUCCESS, FETCH_USER, FETCH_USER_SUCCESS, FETCH_DROIT_USER_SELECTED, FETCH_DROIT_USER_SELECTED_SUCCESS, FETCH_DROIT, FETCH_DROIT_SUCCESS, FETCH_SHARE_LINK, FETCH_SHARE_LINK_SUCCESS, JOIN_SPECIALITE, JoinSpecialite, FetchShareLink, FetchShareLinkSuccess, FetchSpecialite, FetchSpecialiteSuccess, FetchDroit, FetchDroitSuccess, FetchMatiere, FetchMatiereSuccess, FetchUser, FetchUserSuccess, FetchDroitUserSelected, FetchDroitUserSelectedSuccess, SET_DROIT_USER_SELECTED, DELETE_MATIERE, SET_SPECIALITE_SELECTED, SET_USER_SELECTED, UNSET_DROIT_USER_SELECTED, SetDroitUserSelected, UnsetDroitUserSelected, DeleteMatiere, SetSpecialiteSelected, SetUserSelected */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -619,6 +700,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FETCH_DROIT_USER_SELECTED_SUCCESS", function() { return FETCH_DROIT_USER_SELECTED_SUCCESS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FETCH_DROIT", function() { return FETCH_DROIT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FETCH_DROIT_SUCCESS", function() { return FETCH_DROIT_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FETCH_SHARE_LINK", function() { return FETCH_SHARE_LINK; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FETCH_SHARE_LINK_SUCCESS", function() { return FETCH_SHARE_LINK_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "JOIN_SPECIALITE", function() { return JOIN_SPECIALITE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "JoinSpecialite", function() { return JoinSpecialite; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FetchShareLink", function() { return FetchShareLink; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FetchShareLinkSuccess", function() { return FetchShareLinkSuccess; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FetchSpecialite", function() { return FetchSpecialite; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FetchSpecialiteSuccess", function() { return FetchSpecialiteSuccess; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FetchDroit", function() { return FetchDroit; });
@@ -650,6 +737,36 @@ var FETCH_DROIT_USER_SELECTED = '[ monitoring ] fetch droit user selected';
 var FETCH_DROIT_USER_SELECTED_SUCCESS = '[ monitoring ] fetch droit user selected success';
 var FETCH_DROIT = '[ monitoring ] fetch droit';
 var FETCH_DROIT_SUCCESS = '[ monitoring ] fetch droit success';
+var FETCH_SHARE_LINK = '[monitoring] fetch share link';
+var FETCH_SHARE_LINK_SUCCESS = '[ monitoring ] fetch share link success';
+var JOIN_SPECIALITE = '[ monitoring ] join specialite';
+var JoinSpecialite = /** @class */ (function () {
+    function JoinSpecialite(payload) {
+        this.payload = payload;
+        this.type = JOIN_SPECIALITE;
+    }
+    return JoinSpecialite;
+}());
+
+;
+var FetchShareLink = /** @class */ (function () {
+    function FetchShareLink(payload) {
+        this.payload = payload;
+        this.type = FETCH_SHARE_LINK;
+    }
+    return FetchShareLink;
+}());
+
+;
+var FetchShareLinkSuccess = /** @class */ (function () {
+    function FetchShareLinkSuccess(payload) {
+        this.payload = payload;
+        this.type = FETCH_SHARE_LINK_SUCCESS;
+    }
+    return FetchShareLinkSuccess;
+}());
+
+;
 var FetchSpecialite = /** @class */ (function () {
     function FetchSpecialite() {
         this.type = FETCH_SPECIALITE;
@@ -833,10 +950,102 @@ function MonitoringReducer(state, action) {
         case _monitoring_actions__WEBPACK_IMPORTED_MODULE_0__["FETCH_DROIT_USER_SELECTED_SUCCESS"]: {
             return __assign({}, state, { droitUserSelected: action.payload });
         }
+        case _monitoring_actions__WEBPACK_IMPORTED_MODULE_0__["FETCH_SHARE_LINK_SUCCESS"]: {
+            return __assign({}, state, { shareLink: action.payload });
+        }
     }
     return state;
 }
 ;
+
+
+/***/ }),
+
+/***/ "./src/app/monitoring/shared/store/monitoring.selectors.ts":
+/*!*****************************************************************!*\
+  !*** ./src/app/monitoring/shared/store/monitoring.selectors.ts ***!
+  \*****************************************************************/
+/*! exports provided: moonitoringSelector, specialitesSelector, specialitesSelectedSelector, droitsSelector, matieresSelector, usersSelector, userSelectedSelector, droitUserSelectedSelector, getShareLinkSelector */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "moonitoringSelector", function() { return moonitoringSelector; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "specialitesSelector", function() { return specialitesSelector; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "specialitesSelectedSelector", function() { return specialitesSelectedSelector; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "droitsSelector", function() { return droitsSelector; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "matieresSelector", function() { return matieresSelector; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "usersSelector", function() { return usersSelector; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "userSelectedSelector", function() { return userSelectedSelector; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "droitUserSelectedSelector", function() { return droitUserSelectedSelector; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getShareLinkSelector", function() { return getShareLinkSelector; });
+/* harmony import */ var _ngrx_store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @ngrx/store */ "./node_modules/@ngrx/store/fesm5/store.js");
+
+var moonitoringSelector = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_0__["createFeatureSelector"])('monitoring');
+var specialitesSelector = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_0__["createSelector"])(moonitoringSelector, function (searchState) {
+    if (searchState) {
+        return searchState.specialites;
+    }
+    else {
+        return null;
+    }
+});
+var specialitesSelectedSelector = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_0__["createSelector"])(moonitoringSelector, function (searchState) {
+    if (searchState) {
+        return searchState.specialiteSelected;
+    }
+    else {
+        return null;
+    }
+});
+var droitsSelector = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_0__["createSelector"])(moonitoringSelector, function (searchState) {
+    if (searchState) {
+        return searchState.droits;
+    }
+    else {
+        return null;
+    }
+});
+var matieresSelector = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_0__["createSelector"])(moonitoringSelector, function (searchState) {
+    if (searchState) {
+        return searchState.matieres;
+    }
+    else {
+        return null;
+    }
+});
+var usersSelector = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_0__["createSelector"])(moonitoringSelector, function (searchState) {
+    if (searchState) {
+        return searchState.users;
+    }
+    else {
+        return null;
+    }
+});
+var userSelectedSelector = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_0__["createSelector"])(moonitoringSelector, function (searchState) {
+    if (searchState) {
+        return searchState.userSelected;
+    }
+    else {
+        return null;
+    }
+});
+var droitUserSelectedSelector = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_0__["createSelector"])(moonitoringSelector, function (searchState) {
+    if (searchState) {
+        return searchState.droitUserSelected;
+    }
+    else {
+        return null;
+    }
+});
+var getShareLinkSelector = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_0__["createSelector"])(moonitoringSelector, function (searchState) {
+    if (searchState) {
+        return searchState.shareLink;
+    }
+    else {
+        return null;
+    }
+});
 
 
 /***/ }),
@@ -1409,9 +1618,12 @@ var AuthGuard = /** @class */ (function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AuthInterceptor", function() { return AuthInterceptor; });
-/* harmony import */ var _store_selectors_auth_selectors__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../store/selectors/auth.selectors */ "./src/app/shared/store/selectors/auth.selectors.ts");
-/* harmony import */ var _ngrx_store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @ngrx/store */ "./node_modules/@ngrx/store/fesm5/store.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var rxjs_add_operator_do__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! rxjs/add/operator/do */ "./node_modules/rxjs-compat/_esm5/add/operator/do.js");
+/* harmony import */ var _store_selectors_auth_selectors__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../store/selectors/auth.selectors */ "./src/app/shared/store/selectors/auth.selectors.ts");
+/* harmony import */ var _ngrx_store__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ngrx/store */ "./node_modules/@ngrx/store/fesm5/store.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1424,15 +1636,22 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
+
+
 var AuthInterceptor = /** @class */ (function () {
-    function AuthInterceptor(store) {
+    function AuthInterceptor(store, router) {
         var _this = this;
         this.store = store;
-        this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["select"])(_store_selectors_auth_selectors__WEBPACK_IMPORTED_MODULE_0__["authTokenSelector"])).subscribe(function (token) {
+        this.router = router;
+        this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_2__["select"])(_store_selectors_auth_selectors__WEBPACK_IMPORTED_MODULE_1__["authTokenSelector"])).subscribe(function (token) {
             _this.token = token;
         });
     }
-    AuthInterceptor.prototype.intercept = function (req, next) {
+    /**
+     * inter
+     */
+    AuthInterceptor.prototype.inter = function (req, next) {
         if (this.token) {
             var authReq = req.clone({
                 headers: req.headers.set('authorization', this.token)
@@ -1443,9 +1662,23 @@ var AuthInterceptor = /** @class */ (function () {
             return next.handle(req);
         }
     };
+    AuthInterceptor.prototype.intercept = function (req, next) {
+        var _this = this;
+        // Intercept le retour pour l'erreur 401 
+        return this.inter(req, next).do(function (event) {
+            // Dans tout les autre cas que les erreurs
+        }, function (err) {
+            if (err instanceof _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpErrorResponse"]) {
+                if (err.status === 401) {
+                    _this.router.navigateByUrl('/signin');
+                }
+            }
+        });
+    };
     AuthInterceptor = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["Injectable"])(),
-        __metadata("design:paramtypes", [_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["Store"]])
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_3__["Injectable"])(),
+        __metadata("design:paramtypes", [_ngrx_store__WEBPACK_IMPORTED_MODULE_2__["Store"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"]])
     ], AuthInterceptor);
     return AuthInterceptor;
 }());
@@ -1479,6 +1712,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _interceptors_auth_interceptor__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../interceptors/auth.interceptor */ "./src/app/shared/interceptors/auth.interceptor.ts");
 /* harmony import */ var _guards_auth_guard__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../guards/auth.guard */ "./src/app/shared/guards/auth.guard.ts");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _monitoring_shared_interceptors_spe_interceptor__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../monitoring/shared/interceptors/spe-interceptor */ "./src/app/monitoring/shared/interceptors/spe-interceptor.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1505,6 +1739,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 // Guard
 
 // Module
+
 
 var COMPONENTS = [
     _components_signup_signup_component__WEBPACK_IMPORTED_MODULE_4__["SignupComponent"],
@@ -1535,6 +1770,11 @@ var CoreModule = /** @class */ (function () {
                 {
                     provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_9__["HTTP_INTERCEPTORS"],
                     useClass: _interceptors_auth_interceptor__WEBPACK_IMPORTED_MODULE_12__["AuthInterceptor"],
+                    multi: true
+                },
+                {
+                    provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_9__["HTTP_INTERCEPTORS"],
+                    useClass: _monitoring_shared_interceptors_spe_interceptor__WEBPACK_IMPORTED_MODULE_15__["SpeInterceptor"],
                     multi: true
                 },
                 _services_auth_service__WEBPACK_IMPORTED_MODULE_10__["AuthService"],

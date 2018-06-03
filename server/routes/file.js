@@ -26,10 +26,14 @@ router.get('/downloadFile/:id', function(req, res, next) {
     fileDAO.downloadFile(req, res, req.params.id, result => {
         res.sendFile(result);
     });
-
-   
 });
 
+
+router.delete('/deleteFile/:link', function(req, res, next) {
+    fileDAO.deleteFile(req, res, req.params.link, result => {
+       res.status(200);
+    });
+});
 
 
 module.exports = router;

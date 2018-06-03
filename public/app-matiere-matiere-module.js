@@ -229,7 +229,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n\n<div class=\"container\">\n    <h2>{{ressource.nom}}</h2>\n    <hr>\n    <div class=\"row\">\n      <div class= \"col-12\" *ngFor=\"let file of ressourceFile$ | async \" >\n          <span >{{file.name}}</span>\n          <i  class=\"material-icons float-right\" (click)=\"deleteFile(file)\">\n              delete\n          </i>\n          <object \n          [data]='(\"/api/file/downloadFile/\" + file.link) | safe' type=\"application/pdf\" width=\"100%\" height=\"400px\" class=\"mt-3\">\n            <p>Alternative text - include a link <a href=\"myfile.pdf\">to the PDF!</a></p>\n          </object>\n      </div>\n    </div>\n  </div>\n\n<input type=\"file\" (change)=fileEvent($event)> \n\n\n"
+module.exports = "<div class=\"container\">\n  <h2>{{ressource.nom}}</h2>\n  <hr>\n  <div class=\"row\">\n    <div class=\"col-12\" *ngFor=\"let file of ressourceFile$ | async \">\n      <span>{{file.name}}</span>\n      <i class=\"material-icons float-right\" (click)=\"deleteFile(file)\" style=\"color :red\">\n        delete\n      </i>\n      <object [data]='(\"/api/file/downloadFile/\" + file.link) | safe' type=\"application/pdf\" width=\"100%\" height=\"400px\" class=\"mt-3\">\n        <p>Alternative text - include a link\n          <a href=\"myfile.pdf\">to the PDF!</a>\n        </p>\n      </object>\n    </div>\n  </div>\n</div>\n\n<input type=\"file\" (change)=fileEvent($event)>"
 
 /***/ }),
 
@@ -249,6 +249,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/platform-browser */ "./node_modules/@angular/platform-browser/fesm5/platform-browser.js");
 /* harmony import */ var _services_matiere_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../services/matiere.service */ "./src/app/matiere/shared/services/matiere.service.ts");
 /* harmony import */ var _store_ressource_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../store/ressource.actions */ "./src/app/matiere/shared/store/ressource.actions.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -264,11 +265,13 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var AffRessourceComponent = /** @class */ (function () {
-    function AffRessourceComponent(store, sanitizer, matiereService) {
+    function AffRessourceComponent(store, sanitizer, matiereService, router) {
         this.store = store;
         this.sanitizer = sanitizer;
         this.matiereService = matiereService;
+        this.router = router;
         this.ressource$ = this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["select"])(_store_ressource_selectors__WEBPACK_IMPORTED_MODULE_2__["ressourceSelectedSelector"]));
         this.ressourceFile$ = this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["select"])(_store_ressource_selectors__WEBPACK_IMPORTED_MODULE_2__["ressourceFileSelector"]));
     }
@@ -286,12 +289,14 @@ var AffRessourceComponent = /** @class */ (function () {
     AffRessourceComponent.prototype.fileEvent = function ($event) {
         var fileSelected = $event.target.files[0];
         this.store.dispatch(new _store_ressource_actions__WEBPACK_IMPORTED_MODULE_5__["UploadFile"]({ file: fileSelected, idRessource: this.ressource.idRessource }));
+        this.router.navigateByUrl('/matiere/ressources');
     };
     AffRessourceComponent.prototype.getSafeUrl = function (url) {
         return this.sanitizer.bypassSecurityTrustResourceUrl(url);
     };
     AffRessourceComponent.prototype.deleteFile = function (file) {
         this.store.dispatch(new _store_ressource_actions__WEBPACK_IMPORTED_MODULE_5__["DeleteFile"](file));
+        this.router.navigateByUrl('/matiere/ressources');
     };
     AffRessourceComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -301,7 +306,8 @@ var AffRessourceComponent = /** @class */ (function () {
         }),
         __metadata("design:paramtypes", [_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["Store"],
             _angular_platform_browser__WEBPACK_IMPORTED_MODULE_3__["DomSanitizer"],
-            _services_matiere_service__WEBPACK_IMPORTED_MODULE_4__["MatiereService"]])
+            _services_matiere_service__WEBPACK_IMPORTED_MODULE_4__["MatiereService"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_6__["Router"]])
     ], AffRessourceComponent);
     return AffRessourceComponent;
 }());

@@ -73,6 +73,38 @@ let matiereDao = {
             return res.status(404).json({ 'message': 'file not found' })
         }
         callback(filenamewithpath);
+    },
+
+    deleteFile : function (req, res, link, callback) {
+        const fileName = link;
+        var filenamewithpath = path.join(__dirname, '../../tmp/test/', link);
+
+
+        // Suppression de la file
+        fs.unlink(filenamewithpath, (err) => {
+            if (err) {
+                console.log (err);
+                return res.status(500);
+            }
+
+    
+            
+            callback();
+
+
+        });
+
+        // Suppression de la file dans la bd
+        req.getConnection(function (err, connection) {
+            connection.query('delete from File where idFile = ?', [link], function (err, rows, fields) {
+                if (err) {
+                    console.log(err);
+                    res.status(500);
+                }
+
+                callback();
+            });
+        });
     }
 }
 

@@ -18,7 +18,7 @@ module.exports = ".btn-search{\n    background-color: white;\n    border: 2px so
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-12 col-md-4\">\n      <div class=\"container container-white\">\n        <div class=\"row\">\n          <div class=\"col-12\">\n            <span class=\"float-right\">\n              <app-modal-ajout [idReason]=\"'ajoutEcole'\" [title]=\"'Ajouter une école ?' \" (pickedEvent)=\"ajouterEcole($event)\">\n              </app-modal-ajout>\n            </span>\n            <h3 class=\"text-center mt-1\">Ecoles</h3>\n            <hr>\n          </div>\n        </div>\n        <div class=\"row\">\n          <div class=\"col-12\" style=\"max-height: 60vh; overflow-y : scroll\">\n            <button (click)=\"selectEcole(ecole)\" *ngFor=\"let ecole of (ecoles$ | async)\" type=\"button\" class=\"btn btn-search waves-effect col-12 mt-2\">\n              {{ ecole.wording }}\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col-12 col-md-4\">\n      <div class=\"container container-white\" >\n        <div class=\"row\">\n          <div class=\"col-12\">\n\n            <span class=\"float-right\">\n              <app-modal-ajout [idReason]=\"'ajoutSection'\" [title]=\"'Ajouter une section ?'\" (pickedEvent)=\"ajouterSpecialite($event)\">\n              </app-modal-ajout>\n            </span>\n            <h3 class=\"text-center mt-1\">Section</h3>\n            <hr>\n          </div>\n        </div>\n        <div class=\"row\">\n          <div class=\"col-12\" style=\"max-height: 60vh; overflow-y : scroll\" >\n            <button (click)=\"selectSpecialite(spe)\" *ngFor=\"let spe of (specialites$ | async)\" type=\"button\" class=\"btn btn-search waves-effect col-12 mt-2\">\n              {{ spe.wording }}\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col-12 col-md-4\">\n      <div class=\"container container-white\">\n        <div class=\"row\">\n          <div class=\"col-12\">\n            <span class=\"float-right\">\n                <app-modal-ajout [idReason]=\"'ajoutMatiere'\" [title]=\"'Ajouter une matière ?' \" (pickedEvent)=\"ajouterMatiere($event)\" *ngIf=\"possedeDroit('Ajouter')\">\n                </app-modal-ajout>\n              </span>\n            <h3 class=\"text-center mt-1\">Matière</h3>\n            <hr>\n          </div>\n        </div>\n        <div class=\"row\">\n          <div class=\"col-12\" style=\"max-height: 60vh; overflow-y : scroll\">\n            <button (click)=\"selectMatiere(matiere)\" *ngFor=\"let matiere of (matieres$ | async)\" type=\"button\" class=\"btn btn-search waves-effect col-12 mt-2\">\n              {{ matiere.wording }}\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>"
+module.exports = "<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-12 col-md-4\">\n      <div class=\"container container-white\">\n        <div class=\"row\">\n          <div class=\"col-12\">\n            <span class=\"float-right\">\n              <app-modal-ajout [idReason]=\"'ajoutEcole'\" [title]=\"'Ajouter une école ?' \" (pickedEvent)=\"ajouterEcole($event)\">\n              </app-modal-ajout>\n            </span>\n            <h3 class=\"text-center mt-1\">Ecoles</h3>\n            <hr>\n          </div>\n        </div>\n        <div class=\"row\">\n          <div class=\"col-12\" style=\"max-height: 60vh; overflow-y : scroll\">\n            <button (click)=\"selectEcole(ecole)\" *ngFor=\"let ecole of (ecoles$ | async)\" type=\"button\" class=\"btn btn-search waves-effect col-12 mt-2\">\n              {{ ecole.wording }}\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col-12 col-md-4\">\n      <div class=\"container container-white\" >\n        <div class=\"row\">\n          <div class=\"col-12\">\n\n            <span class=\"float-right\">\n              <app-modal-ajout [idReason]=\"'ajoutSection'\" [title]=\"'Ajouter une section ?'\" (pickedEvent)=\"ajouterSpecialite($event)\">\n              </app-modal-ajout>\n            </span>\n            <h3 class=\"text-center mt-1\">Section</h3>\n            <hr>\n            <div style=\"color: red\"> {{erreurDroitSection}}</div>\n          </div>\n        </div>\n        <div class=\"row\">\n          <div class=\"col-12\" style=\"max-height: 60vh; overflow-y : scroll\" >\n            <button (click)=\"selectSpecialite(spe)\" *ngFor=\"let spe of (specialites$ | async)\" type=\"button\" class=\"btn btn-search waves-effect col-12 mt-2\">\n              {{ spe.wording }}\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col-12 col-md-4\">\n      <div class=\"container container-white\">\n        <div class=\"row\">\n          <div class=\"col-12\">\n            <span class=\"float-right\">\n                <app-modal-ajout [idReason]=\"'ajoutMatiere'\" [title]=\"'Ajouter une matière ?' \" (pickedEvent)=\"ajouterMatiere($event)\" *ngIf=\"possedeDroit('Ajouter')\">\n                </app-modal-ajout>\n              </span>\n            <h3 class=\"text-center mt-1\">Matière</h3>\n            <hr>\n          </div>\n        </div>\n        <div class=\"row\">\n          <div class=\"col-12\" style=\"max-height: 60vh; overflow-y : scroll\">\n            <button (click)=\"selectMatiere(matiere)\" *ngFor=\"let matiere of (matieres$ | async)\" type=\"button\" class=\"btn btn-search waves-effect col-12 mt-2\">\n              {{ matiere.wording }}\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -72,11 +72,11 @@ var SearchComponent = /** @class */ (function () {
         this.specialites$ = this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["select"])(_shared_store_search_selectors__WEBPACK_IMPORTED_MODULE_4__["getSpecialitesSelector"]));
     };
     SearchComponent.prototype.selectSpecialite = function (spe) {
+        // Demande les matiere associé à la spé et les droits afin d'afficher ou non le bouton ajouter
         this.store.dispatch(new _shared_store_search_actions__WEBPACK_IMPORTED_MODULE_2__["SetSpecialiteSelected"](spe));
+        this.store.dispatch(new _shared_store_search_actions__WEBPACK_IMPORTED_MODULE_2__["FetchDroit"]());
         this.store.dispatch(new _shared_store_search_actions__WEBPACK_IMPORTED_MODULE_2__["FetchMatieres"]());
         this.matieres$ = this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["select"])(_shared_store_search_selectors__WEBPACK_IMPORTED_MODULE_4__["getMatieresSelector"]));
-        // Récupération des droits du user sur cette spécialité
-        this.store.dispatch(new _shared_store_search_actions__WEBPACK_IMPORTED_MODULE_2__["FetchDroit"]());
     };
     SearchComponent.prototype.selectMatiere = function (matiere) {
         this.store.dispatch(new _shared_store_search_actions__WEBPACK_IMPORTED_MODULE_2__["SetMatiereSelected"](matiere));
@@ -95,7 +95,7 @@ var SearchComponent = /** @class */ (function () {
         var possedeDroit = false;
         if (this.droitUser) {
             this.droitUser.forEach(function (droit) {
-                if (droit.intitule == nomDroit) {
+                if (droit.intitule === nomDroit) {
                     possedeDroit = droit.estAcquis;
                 }
             });
@@ -261,8 +261,13 @@ var SearchService = /** @class */ (function () {
         ;
     };
     SearchService.prototype.getMatieres = function (idSpe) {
-        return this.http.post("/api/search/getMatieres", { idSpe: idSpe }).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (sPos) {
-            return sPos.map(function (r) { return ({ id: r.idMatiere, wording: r.Libelle, type: _models_searchType_enum__WEBPACK_IMPORTED_MODULE_3__["searchType"].MATIERE }); });
+        return this.http.get("/api/search/getMatieres/" + idSpe).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(function (sPos) {
+            if (!sPos.err) {
+                return sPos.map(function (r) { return ({ id: r.idMatiere, wording: r.Libelle, type: _models_searchType_enum__WEBPACK_IMPORTED_MODULE_3__["searchType"].MATIERE }); });
+            }
+            else {
+                return null;
+            }
         }));
         ;
     };

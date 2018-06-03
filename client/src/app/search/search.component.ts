@@ -18,6 +18,7 @@ import { searchType } from './shared/models/searchType.enum';
 import { Router } from '@angular/router';
 import { getEcoleSelectedSelector, getEcolesSelector, getSpecialitesSelector, getMatieresSelector, getDroitsSpeSelectedSelector } from './shared/store/search.selectors';
 import { Droit } from '../monitoring/shared/models/droit.model';
+import { map } from 'rxjs/operators';
 
 
 @Component({
@@ -31,6 +32,8 @@ export class SearchComponent implements OnInit {
   public matieres$ : Observable<searchPossibility[]>;
   public droitsUser$ : Observable<Droit[]>;
   public droitUser : Droit[];
+
+  public erreurDroitSection : string;
   
   ngOnInit() {
     this.store.dispatch(new FetchEcoles());
@@ -54,12 +57,11 @@ export class SearchComponent implements OnInit {
   }
 
   public selectSpecialite(spe : searchPossibility): void {
+    // Demande les matiere associé à la spé et les droits afin d'afficher ou non le bouton ajouter
     this.store.dispatch(new SetSpecialiteSelected(spe));
+    this.store.dispatch(new FetchDroit());
     this.store.dispatch(new FetchMatieres());
     this.matieres$ = this.store.pipe(select(getMatieresSelector));
-
-    // Récupération des droits du user sur cette spécialité
-    this.store.dispatch(new FetchDroit());
   }
 
   public selectMatiere(matiere : searchPossibility): void {
@@ -84,13 +86,12 @@ export class SearchComponent implements OnInit {
     let possedeDroit = false;
     if (this.droitUser) {
       this.droitUser.forEach((droit : Droit) => {
-        if ( droit.intitule == nomDroit ) {
+        if ( droit.intitule === nomDroit ) {
           possedeDroit = droit.estAcquis;
         }
     });
     }
    
-
     return possedeDroit;
   }
 }

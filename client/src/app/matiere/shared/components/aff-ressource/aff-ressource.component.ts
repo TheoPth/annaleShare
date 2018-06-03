@@ -8,6 +8,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatiereService } from '../../services/matiere.service';
 import { UploadFile, FetchRessourceFile, DeleteFile } from '../../store/ressource.actions';
 import { RessourceFile } from '../../models/ressourceFile.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-aff-ressource',
@@ -23,7 +24,8 @@ export class AffRessourceComponent implements OnInit {
   constructor(
     public store : Store<State>,
     public sanitizer: DomSanitizer,
-    public matiereService : MatiereService
+    public matiereService : MatiereService,
+    private router : Router
   ) {
     this.ressource$ = this.store.pipe(select(ressourceSelectedSelector));
     this.ressourceFile$ = this.store.pipe(select(ressourceFileSelector));
@@ -46,6 +48,7 @@ export class AffRessourceComponent implements OnInit {
   public fileEvent($event) {
     let fileSelected: File = $event.target.files[0];
     this.store.dispatch(new UploadFile({file : fileSelected, idRessource : this.ressource.idRessource}));
+    this.router.navigateByUrl('/matiere/ressources');
   }
 
   public getSafeUrl(url : string) {
@@ -54,6 +57,7 @@ export class AffRessourceComponent implements OnInit {
 
   public deleteFile(file : RessourceFile) {
     this.store.dispatch(new DeleteFile(file));
+    this.router.navigateByUrl('/matiere/ressources');
   }
 
 }

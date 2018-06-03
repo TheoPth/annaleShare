@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken');
 const router = require('express').Router();
 const fs = require('fs');
+const RSA_KEY_PRIVATE = fs.readFileSync('./rsa/key');
+const RSA_PUBLIC_KEY = fs.readFileSync('./rsa/key.pub');
+
 const path = require('path');
 const droitTools = require('../../shared/tools/droit.tools');
 
@@ -68,6 +71,35 @@ let droitDAO = {
                 callback(rows);
             });
         });
+    },
+
+    getLienPartage : function (req, res, idDroit, temps, idSpe, callback) {
+        // Création du token pour le lien de partage
+        console.log (idDroit);
+
+
+        const token = jwt.sign({}, RSA_KEY_PRIVATE, {
+            algorithm: 'RS256',
+            expiresIn: JSON.stringify(temps*60)+'s',
+            subject: JSON.stringify({d:idDroit,s:idSpe})
+            });
+        callback (token);
+    },
+
+    joinTeam : function (req, res, link, callback) {
+        // Création du token pour le lien de partage
+        jwt.verify(link, RSA_PUBLIC_KEY, (err, decoded) => {
+            if (err) {
+                console.log(err);
+                console.log('token invalid');
+                return res.status(401).json('token invalid');
+            }
+            const sub = JSON.parse(decoded.sub);
+
+            this.addDroitSpecialite(req, res, req.user.id, sub.s, sub.d, result =>{
+                res.status(200);
+            }); 
+        })
     }
 
 }

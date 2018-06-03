@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../../models/user.model');
 
 let user = {
-    isLoggedIn: function (req, res, next) {
+    isLoggedIn : function (req, res, next) {
         const token = req.headers.authorization;
         if (token) {
             jwt.verify(token, RSA_PUBLIC_KEY, (err, decoded) => {
@@ -25,8 +25,41 @@ let user = {
                 });
             })
         } else {
-            res.status(401).json('pas de token !');
+            return res.status(401).json('pas de token !');
         }
+    },
+
+    getDroit : function (req, res, idSpe, callback) {
+        // Renvoie le niveau de droit de l'utilisateur pour la vérif dans des requêtes
+        req.getConnection(function (err, connection) {
+            connection.query('SELECT idDroit from DroitUserSpecialite where idUser = ? and idSpecialite = ? ', [req.user.id, idSpe], function (err, rows, fields) {
+                if (err) {
+                    console.log(err);
+                    return res.status(500);
+                }
+
+                if (rows[0]) {
+                    callback(rows[0]);
+                } else {
+                    callback();
+                }
+              
+            });
+        });
+    },
+
+    checkDroit : function (req, res, idSpe, lvlDroitMini, callback) {
+        // Permet de vérifier que l'utilisateur outre-pass pas ses droits
+        
+        this.getDroit(req, res, idSpe, droit => {
+            if (droit) {
+                callback (droit.idDroit >= lvlDroitMini);
+            } else {
+                callback(false);
+            }
+           
+        });
+        
     },
 
     // Renvoie tout les spécialités d'une matiere

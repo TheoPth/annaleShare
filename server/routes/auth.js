@@ -55,9 +55,9 @@ router.get('/refresh-token', (req, res) => {
 router.post('/signup', (req, res) => {
 
   req.getConnection(function (err, connexion) {
-    let query = 'insert into user(id, nom, email, mdp) values (?, ?, ?, ?)';
+    let query = 'insert into user(id, nom, prenom, email, mdp) values (?, ?, ?, ?, ?)';
     let password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(8));
-    connexion.query(query, [null, req.body.name, req.body.email, password], function (err, rows, fields) {
+    connexion.query(query, [null, req.body.name, req.body.firstname, req.body.email, password], function (err, rows, fields) {
       if (err) {
         console.log(err);
         return res.status(500).json("sign up fail");

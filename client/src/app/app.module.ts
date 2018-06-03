@@ -28,6 +28,9 @@ import { AuthEffects} from './shared/store/effects/auth.effects';
 import { LayoutModule } from './shared/modules/layout.module';
 import {APP_BASE_HREF} from '@angular/common';
 import { MaterialModule } from './shared/modules/material.module';
+import { Router } from '@angular/router';
+import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
+import { SpeInterceptor } from './monitoring/shared/interceptors/spe-interceptor';
 
 @NgModule({
 
@@ -54,7 +57,9 @@ import { MaterialModule } from './shared/modules/material.module';
     LayoutModule,
   ],
   bootstrap: [AppComponent],
-  providers: [{provide: APP_BASE_HREF, useValue: '/'}]
+  providers: [
+    {provide: APP_BASE_HREF, useValue: '/'}
+  ]
   
 })
 export class AppModule { }

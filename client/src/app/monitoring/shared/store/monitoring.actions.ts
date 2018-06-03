@@ -17,6 +17,25 @@ export const FETCH_DROIT_USER_SELECTED_SUCCESS = '[ monitoring ] fetch droit use
 export const FETCH_DROIT = '[ monitoring ] fetch droit';
 export const FETCH_DROIT_SUCCESS = '[ monitoring ] fetch droit success';
 
+export const FETCH_SHARE_LINK = '[monitoring] fetch share link';
+export const FETCH_SHARE_LINK_SUCCESS = '[ monitoring ] fetch share link success';
+
+export const JOIN_SPECIALITE = '[ monitoring ] join specialite';
+
+export class JoinSpecialite implements Action {
+    readonly type = JOIN_SPECIALITE;
+    constructor(public payload: string){}
+};
+
+export class FetchShareLink implements Action {
+    readonly type = FETCH_SHARE_LINK;
+    constructor(public payload: {idDroit : number, temps : number}){}
+};
+
+export class FetchShareLinkSuccess implements Action {
+    readonly type = FETCH_SHARE_LINK_SUCCESS;
+    constructor(public payload: string ){}
+};
 
 export class FetchSpecialite implements Action {
     readonly type = FETCH_SPECIALITE;   
@@ -109,6 +128,9 @@ FetchDroitUserSelectedSuccess |
 SetDroitUserSelected |
 DeleteMatiere |
 SetSpecialiteSelected |
-SetUserSelected ;
+SetUserSelected |
+FetchShareLink |
+FetchShareLinkSuccess |
+JoinSpecialite;
 
 

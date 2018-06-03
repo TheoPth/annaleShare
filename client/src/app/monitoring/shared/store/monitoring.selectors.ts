@@ -59,3 +59,12 @@ export const droitUserSelectedSelector = createSelector(moonitoringSelector, (se
     }
 });
 
+export const getShareLinkSelector = createSelector(moonitoringSelector, (searchState : MonitoringState) => {
+    if (searchState) {
+        return searchState.shareLink;
+    } else {
+        return null;
+    }
+});
+
+

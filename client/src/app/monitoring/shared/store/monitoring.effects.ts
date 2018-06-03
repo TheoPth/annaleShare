@@ -3,7 +3,7 @@ import { Action, Store, select} from  "@ngrx/store";
 import { State } from "../../../shared/store";
 import { switchMap, tap, debounceTime, map, withLatestFrom } from "rxjs/operators";
 import { ofType, Effect, Actions } from "@ngrx/effects";
-import { FETCH_SPECIALITE, FetchSpecialiteSuccess, FetchDroitSuccess, FETCH_DROIT, FetchMatiereSuccess, DELETE_MATIERE, DeleteMatiere, FetchMatiere, FETCH_MATIERE, FETCH_USER, FetchUser, FetchUserSuccess, FETCH_DROIT_USER_SELECTED, FetchDroitUserSelected, FetchDroitUserSelectedSuccess, SET_DROIT_USER_SELECTED, UNSET_DROIT_USER_SELECTED, SetDroitUserSelected, FetchDroit } from "./monitoring.actions";
+import { FETCH_SPECIALITE, FetchSpecialiteSuccess, FetchDroitSuccess, FETCH_DROIT, FetchMatiereSuccess, DELETE_MATIERE, DeleteMatiere, FetchMatiere, FETCH_MATIERE, FETCH_USER, FetchUser, FetchUserSuccess, FETCH_DROIT_USER_SELECTED, FetchDroitUserSelected, FetchDroitUserSelectedSuccess, SET_DROIT_USER_SELECTED, UNSET_DROIT_USER_SELECTED, SetDroitUserSelected, FetchDroit, FETCH_SHARE_LINK, FetchShareLink, FETCH_SHARE_LINK_SUCCESS, FetchShareLinkSuccess, JOIN_SPECIALITE, JoinSpecialite } from "./monitoring.actions";
 import { MonitoringService } from '../services/monitoring.service';
 import { Donnee } from "../models/donnee.model";
 import { Droit } from "../models/droit.model";
@@ -111,6 +111,30 @@ export class MonitoringEffects {
         }),
         switchMap( () => {
             return [new FetchDroitUserSelected(), new FetchDroit()];
+        })
+    )
+
+    @Effect()
+    getShareLink$ = this.action$.pipe(
+        ofType(FETCH_SHARE_LINK),
+        withLatestFrom(
+            this.store.pipe(select(specialitesSelectedSelector))),
+        switchMap( ([action,spe] : [FetchShareLink, Donnee]) => {
+            return this.monitoringService.getLienPartage(action.payload.idDroit, action.payload.temps, spe.id);
+        }),
+        map( (lien :string) => {
+            return new FetchShareLinkSuccess(lien);
+        })
+    )
+
+    @Effect()
+    joinSpe$ = this.action$.pipe(
+        ofType(JOIN_SPECIALITE),
+        switchMap( (action: JoinSpecialite) => {
+            return this.monitoringService.joinTeam(action.payload);
+        }),
+        map( (lien : string) => {
+            return new FetchShareLinkSuccess(lien);
         })
     )
 

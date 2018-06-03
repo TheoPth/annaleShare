@@ -20,13 +20,14 @@ import { SearchAction,
     FetchSpecialites,
     FetchSpecialitesSuccess,
     FETCH_DROIT,
-    FetchDroitSuccess
+    FetchDroitSuccess,
+    FetchDroit,
+    SET_SPECIALITE_SELECTED
 } from './search.actions';
 import { SearchService } from "../services/search.service";
 import { searchPossibility } from '../models/searchPossibility.model';
 import { searchType } from "../models/searchType.enum";
 import { getMatiereSelectedSelector, getEcoleSelectedSelector, getSpecialiteSelectedSelector } from "./search.selectors";
-import { FetchSpecialite } from "../../../monitoring/shared/store/monitoring.actions";
 import { Droit } from "../../../monitoring/shared/models/droit.model";
 
 
@@ -48,11 +49,11 @@ export class SearchEffects {
     fetchSpecialites$ = this.action$.pipe(
         ofType(FETCH_SPECIALITES),
         withLatestFrom(this.store.pipe(select(getEcoleSelectedSelector))),
-        switchMap (([action, ecole]  : [FetchSpecialite, searchPossibility]) => {
+        switchMap (([action, ecole]  : [FetchSpecialites, searchPossibility]) => {
             return this.searchService.getSpecialites(ecole.id);
         }),
         map( (response: searchPossibility[]) => {
-            return new FetchSpecialitesSuccess(response);
+            return new FetchSpecialitesSuccess(response)
         })
     )
 
@@ -60,7 +61,7 @@ export class SearchEffects {
     fetchMatieres$ = this.action$.pipe(
         ofType(FETCH_MATIERES),
         withLatestFrom(this.store.pipe(select(getSpecialiteSelectedSelector))),
-        switchMap (([action, spe]  : [FetchSpecialite, searchPossibility]) => {
+        switchMap (([action, spe]  : [FetchSpecialites, searchPossibility]) => {
             return this.searchService.getMatieres(spe.id);
         }),
         map( (response: searchPossibility[]) => {
@@ -102,7 +103,6 @@ export class SearchEffects {
         map ( () => {
             return new FetchSpecialites();
         })
-       
     )
 
     @Effect()
@@ -110,7 +110,6 @@ export class SearchEffects {
         ofType(FETCH_DROIT),
         withLatestFrom(this.store.pipe(select(getSpecialiteSelectedSelector))),
         switchMap( ([action, spe] : [Action, searchPossibility]) => {
-            
             return this.searchService.getDroitUserSpeSelected(spe.id);
         }),
         map( (droit: Droit[]) => {

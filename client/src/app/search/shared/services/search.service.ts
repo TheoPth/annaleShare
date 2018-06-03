@@ -23,9 +23,14 @@ export class SearchService {
   }
 
   public getMatieres (idSpe : number): Observable<searchPossibility[]> {
-    return this.http.post<searchPossibility[]>("/api/search/getMatieres", {idSpe : idSpe}).pipe(
+    return this.http.get<searchPossibility[]>("/api/search/getMatieres/" + idSpe).pipe(
       map ((sPos : any) => {
-        return sPos.map (r => ({id : r.idMatiere, wording : r.Libelle, type : searchType.MATIERE}));
+        if (!sPos.err) {
+          return sPos.map (r => ({id : r.idMatiere, wording : r.Libelle, type : searchType.MATIERE}));
+        } else {
+          return null;
+        }
+        
       })
     );;
   }

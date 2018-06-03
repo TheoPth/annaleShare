@@ -1,22 +1,19 @@
-
-
 <div class="container">
-    <h2>{{ressource.nom}}</h2>
-    <hr>
-    <div class="row">
-      <div class= "col-12" *ngFor="let file of ressourceFile$ | async " >
-          <span >{{file.name}}</span>
-          <i  class="material-icons float-right" (click)="deleteFile(file)">
-              delete
-          </i>
-          <object 
-          [data]='("/api/file/downloadFile/" + file.link) | safe' type="application/pdf" width="100%" height="400px" class="mt-3">
-            <p>Alternative text - include a link <a href="myfile.pdf">to the PDF!</a></p>
-          </object>
-      </div>
+  <h2>{{ressource.nom}}</h2>
+  <hr>
+  <div class="row">
+    <div class="col-12" *ngFor="let file of ressourceFile$ | async ">
+      <span>{{file.name}}</span>
+      <i class="material-icons float-right" (click)="deleteFile(file)" style="color :red">
+        delete
+      </i>
+      <object [data]='("/api/file/downloadFile/" + file.link) | safe' type="application/pdf" width="100%" height="400px" class="mt-3">
+        <p>Alternative text - include a link
+          <a href="myfile.pdf">to the PDF!</a>
+        </p>
+      </object>
     </div>
   </div>
+</div>
 
-<input type="file" (change)=fileEvent($event)> 
-
-
+<input type="file" (change)=fileEvent($event)>

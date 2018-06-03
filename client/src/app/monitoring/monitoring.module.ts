@@ -11,6 +11,7 @@ import { MonitoringEffects } from './shared/store/monitoring.effects';
 import { MONITORING_ROUTES } from './monitoring.routes';
 import { PossedeDroitDirective } from './shared/directives/possede-droit.directive';
 import { CheckboxDroitDirective } from './shared/directives/checkbox-droit.directive';
+import { SpeInterceptor } from './shared/interceptors/spe-interceptor';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { CheckboxDroitDirective } from './shared/directives/checkbox-droit.direc
     EffectsModule.forFeature([MonitoringEffects]),
     FormsModule
   ],
-  declarations: [MonitoringComponent, PossedeDroitDirective, CheckboxDroitDirective]
+  declarations: [MonitoringComponent, PossedeDroitDirective, CheckboxDroitDirective],
+  providers : [ ]
 })
 export class MonitoringModule { }
